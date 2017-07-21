@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+android:paddingBottom="16dp"
+android:paddingLeft="16dp"
+android:paddingRight="16dp"
+android:paddingTop="16dp"
+tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity">
+
+<TextView
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
+    android:text="Choose your age"
+    android:id="@+id/textView1"/>
+
+<Spinner
+    android:id="@+id/age_select"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:entries="@array/list"
+    android:spinnerMode="dialog" />
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Choose your sex"
+    android:id="@+id/textView2"/>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose your age"
-        android:id="@+id/textView1"/>
-
-    <Spinner
-        android:id="@+id/age_select"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:entries="@array/list"
-        android:spinnerMode="dialog" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose your sex"
-        android:id="@+id/textView2"/>
-
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity">
 
     <CheckBox
         android:id="@+id/checkbox1"
@@ -56,11 +56,24 @@
 
 </RelativeLayout>
 
-    <Button
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="仮ボタン"
-        android:id="@+id/provisional_button2"
-        android:layout_alignParentStart="true"/>
+        android:id="@+id/username_editText"
+        android:hint="username"/>
+
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="仮ボタン"
+    android:id="@+id/provisional_button2"
+    android:layout_alignParentStart="true"/>
+
+    <com.github.mikephil.charting.charts.HorizontalBarChart
+        android:id="@+id/protein_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
+
 
 </LinearLayout>

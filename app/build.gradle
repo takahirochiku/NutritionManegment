@@ -29,3 +29,14 @@ dependencies {
     compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
 }
+
+android{
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+    // 中略
+}
+
+dependencies {
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+}
