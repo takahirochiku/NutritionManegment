@@ -100,61 +100,75 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 // ジャンルを選択していない場合（mGenre == 0）はエラーを表示するだけ
                 Intent intent = new Intent(getApplicationContext(), InputActivity.class);
                 //intent.putExtra();
-                    startActivity(intent);
-                }
+                startActivity(intent);
+            }
         });
 
-    // ナビゲーションドロワーの設定
-    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
+        // ナビゲーションドロワーの設定
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            int id = item.getItemId();
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int id = item.getItemId();
 
-            if (id == R.id.nav_meals) {
-                mToolbar.setTitle("食事");
-                Log.d("TESTEST","この機能は未だ作り途中です");
-            } else if (id == R.id.nav_nuetrition) {
-                mToolbar.setTitle("栄養");
-                Log.d("TESTEST","この機能は未だ作り途中です");
-            } else if (id == R.id.nav_saumary) {
-                mToolbar.setTitle("サマリー");
-                Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
-                startActivity(intent);
+                if (id == R.id.nav_meals) {
+                    mToolbar.setTitle("食事");
+                    Log.d("TESTEST", "この機能は未だ作り途中です");
+                } else if (id == R.id.nav_nuetrition) {
+                    mToolbar.setTitle("栄養");
+                    Log.d("TESTEST", "この機能は未だ作り途中です");
+                } else if (id == R.id.nav_saumary) {
+                    mToolbar.setTitle("サマリー");
+                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+                    startActivity(intent);
 
 
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
             }
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        }
-    });
-}
+        });
+    }
 
-    private BarDataSet getDataSet() {
-        ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
+    private  ArrayList<BarDataSet> getDataSet() {
+        ArrayList<BarDataSet> dataSets = null;
 
-        proteinchart.add(new BarEntry(1f, 100));
+        ArrayList<BarEntry> proteinchart1 = new ArrayList<BarEntry>();
+        proteinchart1.add(new BarEntry(1f, 100));
+
+        ArrayList<BarEntry> proteinchart2 = new ArrayList<BarEntry>();
+        proteinchart2.add(new BarEntry(1f, 200));
 
         BarDataSet set1;
+        BarDataSet set2;
 
         if (mProteinChart.getData() != null &&
                 mProteinChart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) mProteinChart.getData().getDataSetByIndex(0);
-            set1.setValues(proteinchart);
+            set1.setValues(proteinchart1);
+            set2 = (BarDataSet) mProteinChart.getData().getDataSetByIndex(0);
+            set2.setValues(proteinchart2);
             mProteinChart.getData().notifyDataChanged();
             mProteinChart.notifyDataSetChanged();
         } else {
             Log.d("TESTEST", "チャートに入れる数値がありません");
         }
-        BarDataSet dataset = new BarDataSet(proteinchart, "Protein");
-        return dataset;
+        BarDataSet dataset1 = new BarDataSet(proteinchart1, "Protein1");
+        BarDataSet dataset2 = new BarDataSet(proteinchart2, "Protein2");
+
+        dataSets = new ArrayList<>();
+        dataSets.add(dataset1);
+        dataSets.add(dataset2);
+        return dataSets;
+
     }
+
 
     protected RectF mOnValueSelectedRectF = new RectF();
 
