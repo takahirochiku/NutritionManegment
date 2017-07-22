@@ -1,6 +1,7 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,14 +9,13 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     protected HorizontalBarChart mProteinChart;
-    protected HorizontalBarChart mCalorieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +46,13 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mProteinChart.setDrawGridBackground(false);
         mProteinChart.getDescription().setEnabled(false);
 
-        ArrayList<String> labels1 = new ArrayList<>();
-        labels1.add("Protein");
-
         XAxis xl = mProteinChart.getXAxis();
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xl.setTypeface(mTfLight);
-        xl.setDrawAxisLine(true);
+        xl.setDrawAxisLine(false);
         xl.setDrawGridLines(false);
-        CategoryBarChartXaxisFormatter xaxisFormatter = new CategoryBarChartXaxisFormatter(labels1);
-        xl.setValueFormatter(xaxisFormatter);
-        xl.setGranularity(1);
+        xl.setGranularity(20f);
 
         YAxis yl = mProteinChart.getAxisLeft();
-        yl.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yl.setTypeface(mTfLight);
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
@@ -70,15 +62,23 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         YAxis yr = mProteinChart.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yr.setTypeface(mTfLight);
-        //yr.setDrawAxisLine(true);
+        yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
 
+        Legend l = mProteinChart.getLegend();
+        //l.setFormSize(5f); // set the size of the legend forms/shapes
+        l.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
+        l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        //l.setTypeface(...);
+        l.setTextSize(12f);
+        l.setTextColor(Color.BLACK);
+        l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
+        l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
+
         BarData data = new BarData(getDataSet());
         mProteinChart.setData(data);
-        data.setValueTextSize(20f);
-        data.setBarWidth(100f);
         mProteinChart.setFitBars(false);
         mProteinChart.animateY(2500);
         mProteinChart.invalidate();
@@ -128,27 +128,5 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     @Override
     public void onNothingSelected() {
-    }
-
-    public class CategoryBarChartXaxisFormatter implements IAxisValueFormatter {
-
-        ArrayList<String> mValues;
-
-        public CategoryBarChartXaxisFormatter(ArrayList<String> values) {
-            this.mValues = values;
-        }
-
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-
-            int val = (int) value;
-            String label = "";
-            if (val >= 0 && val < mValues.size()) {
-                label = mValues.get(val);
-            } else {
-                label = "";
-            }
-            return label;
-        }
     }
 }

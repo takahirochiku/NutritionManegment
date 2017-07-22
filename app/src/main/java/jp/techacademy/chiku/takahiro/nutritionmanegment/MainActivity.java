@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle("");
+        setTitle("トップ画面だよ！");
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
         mProteinChart.setOnChartValueSelectedListener(this);
