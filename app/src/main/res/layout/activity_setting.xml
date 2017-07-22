@@ -68,5 +68,18 @@ tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity"
         android:layout_height="match_parent"
         android:background="@android:color/white" />
 
+    <com.github.mikephil.charting.charts.HorizontalBarChart
+        android:id="@+id/calorie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
+
+    <com.github.mikephil.charting.charts.HorizontalBarChart
+        android:id="@+id/fiber_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
+
+
 
 </LinearLayout>

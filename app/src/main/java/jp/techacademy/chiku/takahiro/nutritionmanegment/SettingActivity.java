@@ -22,9 +22,10 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 
-public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener {
+public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     protected HorizontalBarChart mProteinChart;
+    protected HorizontalBarChart mCalorieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,25 +42,25 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
         //意味を確認する
         mProteinChart.setDrawBarShadow(false);
-        mProteinChart.setDrawValueAboveBar(false);
+        mProteinChart.setDrawValueAboveBar(true);
         mProteinChart.setPinchZoom(false);
         mProteinChart.setDrawGridBackground(false);
-
         mProteinChart.getDescription().setEnabled(false);
 
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("Protein");
+        ArrayList<String> labels1 = new ArrayList<>();
+        labels1.add("Protein");
 
         XAxis xl = mProteinChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xl.setTypeface(mTfLight);
         xl.setDrawAxisLine(true);
-        xl.setDrawGridLines(true);
-        CategoryBarChartXaxisFormatter xaxisFormatter = new CategoryBarChartXaxisFormatter(labels);
+        xl.setDrawGridLines(false);
+        CategoryBarChartXaxisFormatter xaxisFormatter = new CategoryBarChartXaxisFormatter(labels1);
         xl.setValueFormatter(xaxisFormatter);
         xl.setGranularity(1);
 
         YAxis yl = mProteinChart.getAxisLeft();
+        yl.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yl.setTypeface(mTfLight);
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
@@ -67,23 +68,24 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 //        yl.setInverted(true);
 
         YAxis yr = mProteinChart.getAxisRight();
+        yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yr.setTypeface(mTfLight);
-        yr.setDrawAxisLine(true);
+        //yr.setDrawAxisLine(true);
         yr.setDrawGridLines(false);
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
 
         BarData data = new BarData(getDataSet());
         mProteinChart.setData(data);
-        mProteinChart.setFitBars(true);
+        data.setValueTextSize(20f);
+        data.setBarWidth(100f);
+        mProteinChart.setFitBars(false);
         mProteinChart.animateY(2500);
         mProteinChart.invalidate();
 
     }
 
     private BarDataSet getDataSet() {
-        //float barWidth = 9f;
-        //float spaceForBar = 10f;
         ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
 
         proteinchart.add(new BarEntry(1f, 100));
