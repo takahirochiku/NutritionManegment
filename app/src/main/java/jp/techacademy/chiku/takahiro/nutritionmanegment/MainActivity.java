@@ -27,6 +27,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         YAxis yr = mProteinChart.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yr.setTypeface(mTfLight);
-        yr.setDrawAxisLine(false);
+        yr.setDrawAxisLine(true);
         yr.setDrawGridLines(false);
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
@@ -88,9 +89,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
 
         BarData data = new BarData(getDataSet());
-        mProteinChart.setData(data);
         mProteinChart.setFitBars(false);
-        mProteinChart.animateY(2500);
+        mProteinChart.animateXY(2000, 2000);
+        mProteinChart.setData(data);
         mProteinChart.invalidate();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -136,39 +137,23 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         });
     }
 
-    private  ArrayList<BarDataSet> getDataSet() {
-        ArrayList<BarDataSet> dataSets = null;
+    private ArrayList<IBarDataSet> getDataSet() {
 
-        ArrayList<BarEntry> proteinchart1 = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
         proteinchart1.add(new BarEntry(1f, 100));
 
-        ArrayList<BarEntry> proteinchart2 = new ArrayList<BarEntry>();
-        proteinchart2.add(new BarEntry(1f, 200));
+        ArrayList<BarEntry> proteinchart2 = new ArrayList<>();
+        proteinchart2.add(new BarEntry(1f, 150));
 
-        BarDataSet set1;
-        BarDataSet set2;
+        BarDataSet barDataSet1 = new BarDataSet(proteinchart1 , "Goal");
+        BarDataSet barDataSet2 = new BarDataSet(proteinchart2 , "Now");
 
-        if (mProteinChart.getData() != null &&
-                mProteinChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) mProteinChart.getData().getDataSetByIndex(0);
-            set1.setValues(proteinchart1);
-            set2 = (BarDataSet) mProteinChart.getData().getDataSetByIndex(0);
-            set2.setValues(proteinchart2);
-            mProteinChart.getData().notifyDataChanged();
-            mProteinChart.notifyDataSetChanged();
-        } else {
-            Log.d("TESTEST", "チャートに入れる数値がありません");
-        }
-        BarDataSet dataset1 = new BarDataSet(proteinchart1, "Protein1");
-        BarDataSet dataset2 = new BarDataSet(proteinchart2, "Protein2");
-
-        dataSets = new ArrayList<>();
-        dataSets.add(dataset1);
-        dataSets.add(dataset2);
-        return dataSets;
+        ArrayList<IBarDataSet>proteinchart_main = new ArrayList<>();
+        proteinchart_main.add(barDataSet1);
+        proteinchart_main.add(barDataSet2);
+        return proteinchart_main;
 
     }
-
 
     protected RectF mOnValueSelectedRectF = new RectF();
 
