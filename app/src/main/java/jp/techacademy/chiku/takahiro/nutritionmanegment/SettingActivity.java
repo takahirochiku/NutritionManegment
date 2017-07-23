@@ -49,7 +49,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         XAxis xl = mProteinChart.getXAxis();
         //xl.setTypeface(mTfLight);
         xl.setDrawAxisLine(false);
-        xl.setDrawGridLines(false);
+        xl.setDrawGridLines(true);
         xl.setGranularity(20f);
 
         YAxis yl = mProteinChart.getAxisLeft();
@@ -64,6 +64,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         //yr.setTypeface(mTfLight);
         yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
+        yl.setDrawLabels(false);
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
 
