@@ -54,27 +54,33 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mProteinChart.setDrawBarShadow(false);
         mProteinChart.setDrawValueAboveBar(true);
         mProteinChart.setPinchZoom(false);
+        //mProteinChart.setMaxVisibleValueCount(60);
         mProteinChart.setDrawGridBackground(false);
         mProteinChart.getDescription().setEnabled(false);
+        mProteinChart.setPinchZoom(false);
+        mProteinChart.setDrawGridBackground(false);
 
         XAxis xl = mProteinChart.getXAxis();
         //xl.setTypeface(mTfLight);
         xl.setDrawAxisLine(false);
-        xl.setDrawGridLines(false);
+        xl.setDrawGridLines(true);
+        xl.setDrawLabels(true);
         xl.setGranularity(20f);
 
         YAxis yl = mProteinChart.getAxisLeft();
         //yl.setTypeface(mTfLight);
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
+        yl.setDrawLabels(false);
         yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yl.setInverted(true);
 
         YAxis yr = mProteinChart.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yr.setTypeface(mTfLight);
-        yr.setDrawAxisLine(true);
+        yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
+        yr.setDrawLabels(true);
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
 
@@ -90,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
         BarData data = new BarData(getDataSet());
         mProteinChart.setFitBars(false);
-        mProteinChart.animateXY(2000, 2000);
+        mProteinChart.animateY(2000);
         mProteinChart.setData(data);
         mProteinChart.invalidate();
 
@@ -139,21 +145,29 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     private ArrayList<IBarDataSet> getDataSet() {
 
+        int count = 2;
+        float range = 2;
+        float spaceForBar = 10f;
+
         ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
         proteinchart1.add(new BarEntry(1f, 100));
 
         ArrayList<BarEntry> proteinchart2 = new ArrayList<>();
         proteinchart2.add(new BarEntry(1f, 150));
 
-        BarDataSet barDataSet1 = new BarDataSet(proteinchart1 , "Goal");
-        BarDataSet barDataSet2 = new BarDataSet(proteinchart2 , "Now");
+        BarDataSet barDataSet1 = new BarDataSet(proteinchart1, "Goal");
+        BarDataSet barDataSet2 = new BarDataSet(proteinchart2, "Now");
 
-        ArrayList<IBarDataSet>proteinchart_main = new ArrayList<>();
+        ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
         proteinchart_main.add(barDataSet1);
         proteinchart_main.add(barDataSet2);
-        return proteinchart_main;
 
-    }
+        /*for (int i = 0; i < count; i++) {
+            float val = (float) (Math.random() * range);
+            proteinchart_main.add(new BarDataSet(i * spaceForBar, val));
+                    //getResources().getDrawable(R.drawable.star)));*/
+            return proteinchart_main;
+        }
 
     protected RectF mOnValueSelectedRectF = new RectF();
 
