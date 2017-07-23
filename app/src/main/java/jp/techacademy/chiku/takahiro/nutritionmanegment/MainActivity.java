@@ -32,6 +32,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
@@ -94,10 +95,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
 
-        BarData data = new BarData(getDataSet());
+        setData(2, 50);
         mProteinChart.setFitBars(false);
         mProteinChart.animateY(2000);
-        mProteinChart.setData(data);
         mProteinChart.invalidate();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -143,31 +143,39 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         });
     }
 
-    private ArrayList<IBarDataSet> getDataSet() {
+    private void setData(int count, float range) {
 
-        int count = 2;
-        float range = 2;
+        float barWidth = 5f;
         float spaceForBar = 10f;
+        ArrayList<BarEntry> proteinchart_main = new ArrayList<BarEntry>();
 
-        ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
-        proteinchart1.add(new BarEntry(1f, 100));
-
-        ArrayList<BarEntry> proteinchart2 = new ArrayList<>();
-        proteinchart2.add(new BarEntry(1f, 150));
-
-        BarDataSet barDataSet1 = new BarDataSet(proteinchart1, "Goal");
-        BarDataSet barDataSet2 = new BarDataSet(proteinchart2, "Now");
-
-        ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
-        proteinchart_main.add(barDataSet1);
-        proteinchart_main.add(barDataSet2);
-
-        /*for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             float val = (float) (Math.random() * range);
-            proteinchart_main.add(new BarDataSet(i * spaceForBar, val));
-                    //getResources().getDrawable(R.drawable.star)));*/
-            return proteinchart_main;
+            proteinchart_main.add(new BarEntry(i * spaceForBar, val));
         }
+
+        BarDataSet set1;
+
+        if ( mProteinChart.getData() != null &&
+                mProteinChart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) mProteinChart.getData().getDataSetByIndex(0);
+            set1.setValues(proteinchart_main);
+            mProteinChart.getData().notifyDataChanged();
+            mProteinChart.notifyDataSetChanged();
+        } else {
+            set1 = new BarDataSet(proteinchart_main, "DataSet 1");
+
+            set1.setDrawIcons(false);
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            dataSets.add(set1);
+
+            BarData data = new BarData(dataSets);
+            data.setValueTextSize(10f);
+            data.setBarWidth(barWidth);
+            mProteinChart.setData(data);
+        }
+    }
 
     protected RectF mOnValueSelectedRectF = new RectF();
 
