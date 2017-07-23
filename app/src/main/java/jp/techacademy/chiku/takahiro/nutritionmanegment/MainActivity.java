@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     private BarData createHorizontalBarChartData(){
         ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
 
         //ラベル名
         //ArrayList<String> proteinchart_label = new ArrayList<>();
@@ -152,22 +153,18 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         //ゴール
         ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
         proteinchart1.add(new BarEntry(1f, 100));
-        proteinchart1.add(new BarEntry(2f, 200));
+        proteinchart1.add(new BarEntry(3f, 200));
 
+        BarDataSet DataSet1 = new BarDataSet(proteinchart1,"Protein");
+        //DataSet1.setColor(ColorTemplate.COLORFUL_COLORS[3]);
 
-        BarDataSet DataSet1 = new BarDataSet(proteinchart1,"Goal");
-        DataSet1.setColor(ColorTemplate.COLORFUL_COLORS[3]);
-
+        // 色の設定
+        colors.add(ColorTemplate.COLORFUL_COLORS[0]);
+        colors.add(ColorTemplate.COLORFUL_COLORS[1]);
+        DataSet1.setColors(colors);
+        DataSet1.setDrawValues(true);
+        
         proteinchart_main.add(DataSet1);
-
-        //摂取量
-        //ArrayList<BarEntry> proteinchart2 = new ArrayList<>();
-        //proteinchart2.add(new BarEntry(1f, 100));
-
-        //BarDataSet DataSet2 = new BarDataSet(proteinchart2,"Now");
-        //DataSet2.setColor(ColorTemplate.COLORFUL_COLORS[4]);
-
-        //proteinchart_main.add(DataSet2);
 
         BarData barData = new BarData(proteinchart_main);
 
