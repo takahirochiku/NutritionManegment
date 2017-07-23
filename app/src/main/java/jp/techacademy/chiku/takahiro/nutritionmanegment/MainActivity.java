@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
@@ -92,13 +93,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         //l.setTypeface(...);
         l.setTextSize(12f);
         l.setTextColor(Color.BLACK);
-        l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
+        //l.setXEntrySpacxe(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
 
-        setData(2, 50);
-        mProteinChart.setFitBars(false);
-        mProteinChart.animateY(2000);
+        mProteinChart.setData(createHorizontalBarChartData());
+        mProteinChart.setFitBars(true);
         mProteinChart.invalidate();
+        mProteinChart.animateY(2000);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -133,8 +134,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                     mToolbar.setTitle("サマリー");
                     Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
                     startActivity(intent);
-
-
                 }
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
@@ -143,40 +142,38 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         });
     }
 
-    private void setData(int count, float range) {
+    private BarData createHorizontalBarChartData(){
+        ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
 
-        float barWidth = 5f;
-        float spaceForBar = 10f;
-        ArrayList<BarEntry> proteinchart_main = new ArrayList<BarEntry>();
+        //ラベル名
+        //ArrayList<String> proteinchart_label = new ArrayList<>();
+        //proteinchart_label.add("Protein");
 
-        for (int i = 0; i < count; i++) {
-            float val = (float) (Math.random() * range);
-            proteinchart_main.add(new BarEntry(i * spaceForBar, val));
-        }
+        //ゴール
+        ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
+        proteinchart1.add(new BarEntry(1f, 100));
+        proteinchart1.add(new BarEntry(2f, 200));
 
-        BarDataSet set1;
 
-        if ( mProteinChart.getData() != null &&
-                mProteinChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) mProteinChart.getData().getDataSetByIndex(0);
-            set1.setValues(proteinchart_main);
-            mProteinChart.getData().notifyDataChanged();
-            mProteinChart.notifyDataSetChanged();
-        } else {
-            set1 = new BarDataSet(proteinchart_main, "DataSet 1");
+        BarDataSet DataSet1 = new BarDataSet(proteinchart1,"Goal");
+        DataSet1.setColor(ColorTemplate.COLORFUL_COLORS[3]);
 
-            set1.setDrawIcons(false);
+        proteinchart_main.add(DataSet1);
 
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-            dataSets.add(set1);
+        //摂取量
+        //ArrayList<BarEntry> proteinchart2 = new ArrayList<>();
+        //proteinchart2.add(new BarEntry(1f, 100));
 
-            BarData data = new BarData(dataSets);
-            data.setValueTextSize(10f);
-            data.setBarWidth(barWidth);
-            mProteinChart.setData(data);
-        }
+        //BarDataSet DataSet2 = new BarDataSet(proteinchart2,"Now");
+        //DataSet2.setColor(ColorTemplate.COLORFUL_COLORS[4]);
+
+        //proteinchart_main.add(DataSet2);
+
+        BarData barData = new BarData(proteinchart_main);
+
+        return barData;
+
     }
-
     protected RectF mOnValueSelectedRectF = new RectF();
 
     @SuppressLint("NewApi")
