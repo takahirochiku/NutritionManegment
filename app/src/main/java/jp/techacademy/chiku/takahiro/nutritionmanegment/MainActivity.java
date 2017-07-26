@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle("トップ画面");
+        setTitle("トップ");
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
         mProteinChart.setOnChartValueSelectedListener(this);
@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         //xl.setTypeface(mTfLight);
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(true);
-        xl.setDrawLabels(true);
-        xl.setGranularity(20f);
+        xl.setDrawLabels(false);
+        xl.setGranularity(30f);
 
         YAxis yl = mProteinChart.getAxisLeft();
         //yl.setTypeface(mTfLight);
@@ -143,30 +143,35 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     private BarData createHorizontalBarChartData(){
+
         ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
+        //ArrayList<String> labels = new ArrayList<>();
 
         //ラベル名
-        //ArrayList<String> proteinchart_label = new ArrayList<>();
-        //proteinchart_label.add("Protein");
+        //labels.add("A");
+        //labels.add("B");
 
         //ゴール
         ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
-        proteinchart1.add(new BarEntry(1f, 100));
-        proteinchart1.add(new BarEntry(3f, 200));
+        proteinchart1.add(new BarEntry(3f, 100));
+        proteinchart1.add(new BarEntry(10f, 200));
 
         BarDataSet DataSet1 = new BarDataSet(proteinchart1,"Protein");
-        //DataSet1.setColor(ColorTemplate.COLORFUL_COLORS[3]);
 
         // 色の設定
         colors.add(ColorTemplate.COLORFUL_COLORS[0]);
         colors.add(ColorTemplate.COLORFUL_COLORS[1]);
         DataSet1.setColors(colors);
         DataSet1.setDrawValues(true);
-        
+
+
+
         proteinchart_main.add(DataSet1);
 
         BarData barData = new BarData(proteinchart_main);
+        barData.setBarWidth(5f);
+
 
         return barData;
 

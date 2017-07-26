@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SummaryActivity"
+    tools:showIn="@layout/app_bar_summary">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="～月～日(TODAYにしたい)"
-        android:id="@+id/today_text1"
-        android:layout_alignParentStart="true"/>
+        android:id="@+id/today_text1" />
 
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="～～～をもっと摂取しましょう(栄養素代入したい)"
-    android:id="@+id/today_text2"
-    android:layout_alignParentStart="true"/>
+    android:id="@+id/today_text2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="～～～の摂取を控えましょう(栄養素代入したい)"
-        android:id="@+id/today_text3"
-        android:layout_alignParentStart="true"/>
+        android:id="@+id/today_text3"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/wishingmeals_edittext"
-        android:hint="Input what you feel like to(例:卵,鶏肉...)"/>
+        android:hint="Input what you feel like to(例:卵,鶏肉...)"
+        android:layout_below="@+id/today_text3"/>
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
         tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SummaryActivity">
 
         <Button
@@ -52,16 +56,16 @@
 
     </RelativeLayout>
 
-        <Button
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="仮：検索結果の栄養素を出したい"
+        android:id="@+id/result1" />
+
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="仮ボタン"
-        android:id="@+id/provisional_button2" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="オススメレシピ"
-            android:id="@+id/recommedingrecipe_button" />
+        android:text="オススメレシピ"
+        android:id="@+id/recommedingrecipe_button" />
 
 </LinearLayout>
