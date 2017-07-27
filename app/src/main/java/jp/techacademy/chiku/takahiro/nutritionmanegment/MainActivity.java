@@ -1,7 +1,9 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -32,16 +34,34 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
+
+import android.content.res.AssetManager;
+
 
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     private Toolbar mToolbar;
     protected HorizontalBarChart mProteinChart;
+    protected HorizontalBarChart mCalorieChart;
+    protected HorizontalBarChart mFiverChart;
+    protected HorizontalBarChart mCalcuimChart;
+
+    String age;
+    String sex;
+    String nutrition;
+    String amount1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,6 +70,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
         mProteinChart.setOnChartValueSelectedListener(this);
+        mCalorieChart = (HorizontalBarChart) findViewById(R.id.calorie_chart2);
+        mCalorieChart.setOnChartValueSelectedListener(this);
+        mFiverChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
+        mFiverChart.setOnChartValueSelectedListener(this);
+        mCalcuimChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
+        mCalcuimChart.setOnChartValueSelectedListener(this);
+
         // mChart.setHighlightEnabled(false);
 
         //意味を確認する
@@ -62,12 +89,29 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mProteinChart.setPinchZoom(false);
         mProteinChart.setDrawGridBackground(false);
 
+        mCalorieChart.setDrawBarShadow(false);
+        mCalorieChart.setDrawValueAboveBar(true);
+        mCalorieChart.setPinchZoom(false);
+        //mProteinChart.setMaxVisibleValueCount(60);
+        mCalorieChart.setDrawGridBackground(false);
+        mCalorieChart.getDescription().setEnabled(false);
+        mCalorieChart.setPinchZoom(false);
+        mCalorieChart.setDrawGridBackground(false);
+
         XAxis xl = mProteinChart.getXAxis();
         //xl.setTypeface(mTfLight);
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(true);
         xl.setDrawLabels(false);
         xl.setGranularity(30f);
+
+        XAxis xm = mCalorieChart.getXAxis();
+        //xl.setTypeface(mTfLight);
+        xm.setDrawAxisLine(false);
+        xm.setDrawGridLines(true);
+        xm.setDrawLabels(false);
+        xm.setGranularity(30f);
+
 
         YAxis yl = mProteinChart.getAxisLeft();
         //yl.setTypeface(mTfLight);
@@ -77,6 +121,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yl.setInverted(true);
 
+        YAxis ym = mCalorieChart.getAxisLeft();
+        //yl.setTypeface(mTfLight);
+        ym.setDrawAxisLine(false);
+        ym.setDrawGridLines(false);
+        ym.setDrawLabels(false);
+        ym.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+//        yl.setInverted(true);
+
         YAxis yr = mProteinChart.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yr.setTypeface(mTfLight);
@@ -84,6 +136,15 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         yr.setDrawGridLines(false);
         yr.setDrawLabels(true);
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+//        yr.setInverted(true);
+
+        YAxis ys = mCalorieChart.getAxisRight();
+        ys.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        //yr.setTypeface(mTfLight);
+        ys.setDrawAxisLine(false);
+        ys.setDrawGridLines(false);
+        ys.setDrawLabels(true);
+        ys.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
 
         Legend l = mProteinChart.getLegend();
@@ -96,10 +157,25 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         //l.setXEntrySpacxe(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
 
-        mProteinChart.setData(createHorizontalBarChartData());
+        Legend m = mCalorieChart.getLegend();
+        //l.setFormSize(5f); // set the size of the legend forms/shapes
+        m.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
+        m.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        //l.setTypeface(...);
+        m.setTextSize(12f);
+        m.setTextColor(Color.BLACK);
+        //l.setXEntrySpacxe(5f); // set the space between the legend entries on the x-axis
+        m.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
+
+        mProteinChart.setData(createHorizontalBarChartData1());
         mProteinChart.setFitBars(true);
         mProteinChart.invalidate();
         mProteinChart.animateY(2000);
+
+        mCalorieChart.setData(createHorizontalBarChartData2());
+        mCalorieChart.setFitBars(true);
+        mCalorieChart.invalidate();
+        mCalorieChart.animateY(2000);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -117,32 +193,72 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.nav_meals) {
-                    mToolbar.setTitle("食事");
-                    Log.d("TESTEST", "この機能は未だ作り途中です");
-                } else if (id == R.id.nav_nuetrition) {
-                    mToolbar.setTitle("栄養");
-                    Log.d("TESTEST", "この機能は未だ作り途中です");
-                } else if (id == R.id.nav_saumary) {
-                    mToolbar.setTitle("サマリー");
-                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
-                    startActivity(intent);
-                }
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        });
     }
 
-    private BarData createHorizontalBarChartData(){
+    public static void parse(Context context) {
+        // AssetManagerの呼び出し
+        AssetManager assetManager = context.getResources().getAssets();
+        try {
+            // CSVファイルの読み込み
+            InputStream is = assetManager.open("recomendednutritiondata.csv");
+            InputStreamReader inputStreamReader = new InputStreamReader(is);
+            BufferedReader bufferReader = new BufferedReader(inputStreamReader);
+            String line = "";
+            while ((line = bufferReader.readLine()) != null) {
+                // 各行が","で区切られていて4つの項目があるとする
+                StringTokenizer st = new StringTokenizer(line, ",");
+                String age = st.nextToken();
+                String sex = st.nextToken();
+                String nutrition = st.nextToken();
+                String amount1 = st.nextToken();
+                int amount2=Integer.parseInt(amount1);
+
+                // 何らかの処理
+            }
+            bufferReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+    navigationView.setNavigationItemSelectedListener(null);
+
+    /*NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+
+    {
+        @Override
+        public boolean onNavigationItemSelected (MenuItem item){
+        int id = item.getItemId();
+
+        if (id == R.id.nav_meals) {
+            mToolbar.setTitle("食事");
+            Log.d("TESTEST", "この機能は未だ作り途中です");
+        } else if (id == R.id.nav_nuetrition) {
+            mToolbar.setTitle("栄養");
+            Log.d("TESTEST", "この機能は未だ作り途中です");
+        } else if (id == R.id.nav_saumary) {
+            mToolbar.setTitle("サマリー");
+            Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+            startActivity(intent);
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    });
+
+    NavigationView navigationView = null; (NavigationView) findViewById(R.id.nav_view);
+    navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            return true;
+        }
+    });*/
+
+
+    private BarData createHorizontalBarChartData1(){
 
         ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
@@ -170,6 +286,41 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         proteinchart_main.add(DataSet1);
 
         BarData barData = new BarData(proteinchart_main);
+        barData.setBarWidth(5f);
+
+
+        return barData;
+
+    }
+
+    private BarData createHorizontalBarChartData2(){
+
+        ArrayList<IBarDataSet> caloriechart_main = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+        //ArrayList<String> labels = new ArrayList<>();
+
+        //ラベル名
+        //labels.add("A");
+        //labels.add("B");
+
+        //ゴール
+        ArrayList<BarEntry> caloriechart1 = new ArrayList<>();
+        caloriechart1.add(new BarEntry(3f, 100));
+        caloriechart1.add(new BarEntry(10f, 200));
+
+        BarDataSet DataSet1 = new BarDataSet(caloriechart1,"Calorie");
+
+        // 色の設定
+        colors.add(ColorTemplate.COLORFUL_COLORS[0]);
+        colors.add(ColorTemplate.COLORFUL_COLORS[1]);
+        DataSet1.setColors(colors);
+        DataSet1.setDrawValues(true);
+
+
+
+        caloriechart_main.add(DataSet1);
+
+        BarData barData = new BarData(caloriechart_main);
         barData.setBarWidth(5f);
 
 
