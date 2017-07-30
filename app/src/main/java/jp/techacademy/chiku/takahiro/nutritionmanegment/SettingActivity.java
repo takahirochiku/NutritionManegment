@@ -30,7 +30,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        setTitle("設定c！！");
+        setTitle("設定！！");
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);

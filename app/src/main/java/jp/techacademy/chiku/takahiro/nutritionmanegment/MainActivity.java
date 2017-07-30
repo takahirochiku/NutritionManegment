@@ -38,26 +38,42 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import android.content.res.AssetManager;
 
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
+
 
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     private Toolbar mToolbar;
+
+
+    /*private RealmChangeListener mRealmListener = new RealmChangeListener() {
+        @Override
+        public void onChange(Object element) {
+            reloadListView();
+        }
+    };*/
+
     protected HorizontalBarChart mProteinChart;
     protected HorizontalBarChart mCalorieChart;
     protected HorizontalBarChart mFiverChart;
     protected HorizontalBarChart mCalcuimChart;
 
-    String age;
-    String sex;
-    String nutrition;
-    String amount1;
-
+    public String Calorie_cal;
+    public String Protein_g;
+    public String Fiber_g;
+    public String Calcium_mg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +193,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mCalorieChart.invalidate();
         mCalorieChart.animateY(2000);
 
+        load();
+        //CSVParser parser = new CSVParser();
+        //Context context = getApplicationContext();
+        //parser.parse(context);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,70 +214,83 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected (MenuItem item){
+                int id = item.getItemId();
+
+                if (id == R.id.nav_meals) {
+                    mToolbar.setTitle("食事");
+                    Log.d("TESTEST", "この機能は未だ作り途中です");
+                } else if (id == R.id.nav_nuetrition) {
+                    mToolbar.setTitle("栄養");
+                    Log.d("TESTEST", "この機能は未だ作り途中です");
+                } else if (id == R.id.nav_saumary) {
+                    mToolbar.setTitle("サマリー");
+                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+                    startActivity(intent);
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+        //addTaskForTest();
+
+        //reloadListView();
+
     }
 
-    public static void parse(Context context) {
-        // AssetManagerの呼び出し
-        AssetManager assetManager = context.getResources().getAssets();
-        try {
-            // CSVファイルの読み込み
-            InputStream is = assetManager.open("recomendednutritiondata.csv");
-            InputStreamReader inputStreamReader = new InputStreamReader(is);
-            BufferedReader bufferReader = new BufferedReader(inputStreamReader);
-            String line = "";
-            while ((line = bufferReader.readLine()) != null) {
-                // 各行が","で区切られていて4つの項目があるとする
-                StringTokenizer st = new StringTokenizer(line, ",");
-                String age = st.nextToken();
-                String sex = st.nextToken();
-                String nutrition = st.nextToken();
-                String amount1 = st.nextToken();
-                int amount2=Integer.parseInt(amount1);
+    private void load() {
 
-                // 何らかの処理
+        Resources res = this.getResources();
+        ArrayList<Nutritiondata> nutritionList = new ArrayList<>();
+
+        //rawより読み込みデータを追加する
+        InputStream inStream = res.openRawResource(R.raw.recomendednutritiondata);
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String str;
+        try {
+            if (reader == null) {
+                throw new IllegalArgumentException("reader == null");
             }
-            bufferReader.close();
+            while ((str = reader.readLine()) != null) {
+                ArrayList<String> resultArray = new ArrayList<>(Arrays.asList(str.split(",")));
+                for (int i = 0 ; i < resultArray.size() ; i++){
+                    nutritionList.add(resultArray);
+                }
+                //ArrayList<Nutritiondata> nutritionList = (ArrayList<Nutritiondata>) resultArray;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-    navigationView.setNavigationItemSelectedListener(null);
+    /*private void reloadListView() {
+        // Realmデータベースから取得
+        RealmResults<Nutritiondata> taskRealmResults1 = mRealm.where(Nutritiondata.class).filter("nutrition =='Calorie_cal'","age == '18～29'","sex == '男性'" );
+        // 上記の結果を、Calorie_cal としてセットする
+        Calorie_cal = mRealm.copyFromRealm(taskRealmResults1);
 
-    /*NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        RealmResults<Nutritiondata> taskRealmResults2 = mRealm.where(Nutritiondata.class).filter("nutrition =='Protein_g","age == '18～29'","sex == '男性'" );
+        Protein_g = mRealm.copyFromRealm(taskRealmResults2);
 
-    {
-        @Override
-        public boolean onNavigationItemSelected (MenuItem item){
-        int id = item.getItemId();
+        RealmResults<Nutritiondata> taskRealmResults3 = mRealm.where(Nutritiondata.class).filter("nutrition =='Fiber_g","age == '18～29'","sex == '男性'");
+        Fiber_g = mRealm.copyFromRealm(taskRealmResults3);
 
-        if (id == R.id.nav_meals) {
-            mToolbar.setTitle("食事");
-            Log.d("TESTEST", "この機能は未だ作り途中です");
-        } else if (id == R.id.nav_nuetrition) {
-            mToolbar.setTitle("栄養");
-            Log.d("TESTEST", "この機能は未だ作り途中です");
-        } else if (id == R.id.nav_saumary) {
-            mToolbar.setTitle("サマリー");
-            Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
-            startActivity(intent);
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-    });
-
-    NavigationView navigationView = null; (NavigationView) findViewById(R.id.nav_view);
-    navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            return true;
-        }
-    });*/
-
+        RealmResults<Nutritiondata> taskRealmResults4 = mRealm.where(Nutritiondata.class).filter("nutrition =='Calcium_mg","age == '18～29'","sex == '男性'" );
+        Calcium_mg = mRealm.copyFromRealm(taskRealmResults4);
+    }*/
 
     private BarData createHorizontalBarChartData1(){
 

@@ -41,5 +41,4 @@ android{
 
 dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
-    compile 'com.github.dmytrodanylyk.realm-browser:library:0.0.2'
 }
