@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     public String Fiber_g;
     public String Calcium_mg;
 
+    private Nutritiondata mNutritiondataList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -267,7 +269,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             while ((str = reader.readLine()) != null) {
                 ArrayList<String> resultArray = new ArrayList<>(Arrays.asList(str.split(",")));
                 for (int i = 0 ; i < resultArray.size() ; i++){
-                    nutritionList.add(resultArray);
+                    nutritionList.addAll(new ArrayList(resultArray));
+                    Log.d("ログ", nutritionList.get(i).toString());
                 }
                 //ArrayList<Nutritiondata> nutritionList = (ArrayList<Nutritiondata>) resultArray;
             }
