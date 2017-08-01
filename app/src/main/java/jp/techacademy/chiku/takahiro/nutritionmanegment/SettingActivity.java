@@ -1,12 +1,20 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -25,6 +33,9 @@ import java.util.ArrayList;
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     protected HorizontalBarChart mProteinChart;
+    String mSexMale;
+    String mSexFemale;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +48,6 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart);
         mProteinChart.setOnChartValueSelectedListener(this);
-        // mChart.setHighlightEnabled(false);
 
         //意味を確認する
         mProteinChart.setDrawBarShadow(false);
@@ -84,7 +94,62 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mProteinChart.animateY(2500);
         mProteinChart.invalidate();
 
+        final Spinner mSpinnerAge = (Spinner) findViewById(R.id.age_select);
+
+        final CheckBox mCheckBoxSexMale = (CheckBox) findViewById(R.id.checkbox1);
+        mCheckBoxSexMale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCheckBoxSexMale.isChecked() == true) {
+                    mSexMale = new String("男性");
+                }
+            }
+        });
+
+        final CheckBox mCheckBoxSexFemale = (CheckBox) findViewById(R.id.checkbox2);
+        mCheckBoxSexFemale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCheckBoxSexFemale.isChecked() == true) {
+                    mSexFemale = new String("女性");
+                }
+            }
+        });
+
+        final EditText mEditTextUser = (EditText) findViewById(R.id.username_editText);
+
+        Button mButtonSetting = (Button) findViewById(R.id.setting_button);
+        mButtonSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.setting_button) {
+
+                    if (mSpinnerAge == null) {
+                        Snackbar.make(view, "年齢の選択がありません", Snackbar.LENGTH_LONG).show();
+                    } else if (mSexMale == null && mSexFemale == null) {
+                        Snackbar.make(view, "性別の選択がありません", Snackbar.LENGTH_LONG).show();
+                    } else if (mEditTextUser == null) {
+                        Snackbar.make(view, "ユーザー名がありません", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("Age", mSpinnerAge.getSelectedItem().toString());
+                        if (mCheckBoxSexMale.isChecked() == true) {
+                            editor.putString("SexMale", mSexMale);
+                        }
+                        if (mCheckBoxSexFemale.isChecked() == true) {
+                            editor.putString("SexFemale", mSexFemale);
+                        }
+                        editor.putString("User", mEditTextUser.getText().toString());
+                        editor.apply();
+
+                        Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
     }
+
 
     private BarDataSet getDataSet() {
         ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();

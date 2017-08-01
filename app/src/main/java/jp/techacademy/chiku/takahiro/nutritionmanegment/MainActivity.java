@@ -198,9 +198,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mCalorieChart.animateY(2000);
 
         readNutritionData();
-        //CSVParser parser = new CSVParser();
-        //Context context = getApplicationContext();
-        //parser.parse(context);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -251,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     private List<Nutritiondata> nutritionLists = new ArrayList<>();
     private void readNutritionData() {
-        InputStream is =  getResources().openRawResource(R.raw.recomendednutritiondata);
+        InputStream is =  this.getResources().openRawResource(R.raw.recomendednutritiondata);
 
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(is, Charset.forName("UTF-8"))
@@ -260,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         String line ="";
         try{
             while ((line = reader.readLine()) != null){
+                Log.d("TESTTEST","Line:"+line);
                 String[] tokens =line.split(",");
 
                 Nutritiondata standerdlist = new Nutritiondata();
@@ -270,13 +268,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 nutritionLists.add(standerdlist);
 
                 Log.d("TESTTEST","Just created:"+standerdlist);
-
             }
         } catch (IOException e) {
             Log.d("TESTTEST","Error reading data file on line" + line, e);
             e.printStackTrace();
         }
     }
+
+
 
     /*private void reloadListView() {
         // Realmデータベースから取得
