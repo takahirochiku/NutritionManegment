@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.gesture.OrientedBoundingBox;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -195,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mCalorieChart.invalidate();
         mCalorieChart.animateY(2000);
 
-        load();
+        readNutritionData();
         //CSVParser parser = new CSVParser();
         //Context context = getApplicationContext();
         //parser.parse(context);
@@ -247,34 +249,31 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     }
 
-    private void load() {
+    private List<Nutritiondata> nutritionLists = new ArrayList<>();
+    private void readNutritionData() {
+        InputStream is =  getResources().openRawResource(R.raw.recomendednutritiondata);
 
-        Resources res = this.getResources();
-        ArrayList<Nutritiondata> nutritionList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(is, Charset.forName("UTF-8"))
+        );
 
-        //rawより読み込みデータを追加する
-        InputStream inStream = res.openRawResource(R.raw.recomendednutritiondata);
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String line ="";
+        try{
+            while ((line = reader.readLine()) != null){
+                String[] tokens =line.split(",");
 
-        String str;
-        try {
-            if (reader == null) {
-                throw new IllegalArgumentException("reader == null");
-            }
-            while ((str = reader.readLine()) != null) {
-                ArrayList<String> resultArray = new ArrayList<>(Arrays.asList(str.split(",")));
-                for (int i = 0 ; i < resultArray.size() ; i++){
-                    nutritionList.addAll(new ArrayList(resultArray));
-                    Log.d("ログ", nutritionList.get(i).toString());
-                }
-                //ArrayList<Nutritiondata> nutritionList = (ArrayList<Nutritiondata>) resultArray;
+                Nutritiondata standerdlist = new Nutritiondata();
+                standerdlist.setAge(tokens[0]);
+                standerdlist.setSex(tokens[1]);
+                standerdlist.setNutrition(tokens[2]);
+                standerdlist.setAmount(Integer.parseInt(tokens[3]));
+                nutritionLists.add(standerdlist);
+
+                Log.d("TESTTEST","Just created:"+standerdlist);
+
             }
         } catch (IOException e) {
+            Log.d("TESTTEST","Error reading data file on line" + line, e);
             e.printStackTrace();
         }
     }
