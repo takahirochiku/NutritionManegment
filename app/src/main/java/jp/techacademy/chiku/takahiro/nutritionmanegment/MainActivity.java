@@ -246,20 +246,24 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     }
 
+    //予めモデルクラスを作成する事(NutritionData.class)
     private List<Nutritiondata> nutritionLists = new ArrayList<>();
     private void readNutritionData() {
+        //Androidstudioはthisが必須,eclipceはいらないらしい
         InputStream is =  this.getResources().openRawResource(R.raw.recomendednutritiondata);
-
+         //リーダーを設定
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(is, Charset.forName("UTF-8"))
         );
-
+         //リーダー用の変数を宣言、Log.dでエラーにならないよう""を設定
         String line ="";
         try{
+            //readLineで一行ずつでブレイクする
             while ((line = reader.readLine()) != null){
+                //エラーが発生した際にどの行で止まったのか見るLog
                 Log.d("TESTTEST","Line:"+line);
+                //tokensとsplitで分割する
                 String[] tokens =line.split(",");
-
                 Nutritiondata standerdlist = new Nutritiondata();
                 standerdlist.setAge(tokens[0]);
                 standerdlist.setSex(tokens[1]);
@@ -270,6 +274,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 Log.d("TESTTEST","Just created:"+standerdlist);
             }
         } catch (IOException e) {
+            //エラーが発生した際にどの行が原因か見るLog
             Log.d("TESTTEST","Error reading data file on line" + line, e);
             e.printStackTrace();
         }

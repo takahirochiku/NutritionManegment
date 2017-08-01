@@ -100,6 +100,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mCheckBoxSexMale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //checkbox形式はisCheckedでtrueが変える場合、変数に値を代入させる
                 if (mCheckBoxSexMale.isChecked() == true) {
                     mSexMale = new String("男性");
                 }
@@ -131,8 +132,10 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                     } else if (mEditTextUser == null) {
                         Snackbar.make(view, "ユーザー名がありません", Snackbar.LENGTH_LONG).show();
                     } else {
+                        //Context.MODE_PRIVATEはセキュリティレベルが：このアプリ限定を示す
                         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
+                        //Spinner形式はgetTextではなくgetSelectedItem
                         editor.putString("Age", mSpinnerAge.getSelectedItem().toString());
                         if (mCheckBoxSexMale.isChecked() == true) {
                             editor.putString("SexMale", mSexMale);
