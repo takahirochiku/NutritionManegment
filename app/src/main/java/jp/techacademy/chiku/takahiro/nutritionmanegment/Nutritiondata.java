@@ -45,14 +45,6 @@ public class Nutritiondata extends RealmObject implements Serializable {
         this.amount = amount;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "Nutritiondata{" +
@@ -60,7 +52,6 @@ public class Nutritiondata extends RealmObject implements Serializable {
                 ", sex='" + sex + '\'' +
                 ", nutrition='" + nutrition + '\'' +
                 ", amount=" + amount +
-                ", id=" + id +
                 '}';
     }
 }

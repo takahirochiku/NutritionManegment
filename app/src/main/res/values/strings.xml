@@ -6,18 +6,20 @@
     <string name="checkbox_female">女性</string>
 
     <string-array name="list">
-        <item>0～10</item>
-        <item>11～15</item>
-        <item>16～20</item>
-        <item>21～25</item>
-        <item>26～30</item>
-        <item>31～35</item>
-        <item>36～40</item>
-        <item>41～45</item>
-        <item>46～50</item>
-        <item>51～55</item>
-        <item>56～60</item>
-        <item>61～70</item>
+        <item>0～5ヶ月</item>
+        <item>6～8ヶ月</item>
+        <item>9～11ヶ月</item>
+        <item>1～2</item>
+        <item>3～5</item>
+        <item>6～7</item>
+        <item>8～9</item>
+        <item>10～11</item>
+        <item>12～14</item>
+        <item>15～17</item>
+        <item>18～29</item>
+        <item>30～49</item>
+        <item>50～69</item>
+        <item>70以上</item>
     </string-array>
 
     <string-array name="list2">

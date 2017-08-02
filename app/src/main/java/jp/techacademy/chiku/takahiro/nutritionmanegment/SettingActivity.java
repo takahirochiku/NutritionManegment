@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -30,11 +31,15 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     protected HorizontalBarChart mProteinChart;
-    String mSexMale;
-    String mSexFemale;
+    String mSex;
+    Spinner mSpinnerAge;
 
 
     @Override
@@ -102,7 +107,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             public void onClick(View view) {
                 //checkbox形式はisCheckedでtrueが変える場合、変数に値を代入させる
                 if (mCheckBoxSexMale.isChecked() == true) {
-                    mSexMale = new String("男性");
+                    mSex = new String("男性");
                 }
             }
         });
@@ -112,7 +117,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             @Override
             public void onClick(View view) {
                 if (mCheckBoxSexFemale.isChecked() == true) {
-                    mSexFemale = new String("女性");
+                    mSex = new String("女性");
                 }
             }
         });
@@ -125,9 +130,12 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             public void onClick(View view) {
                 if (view.getId() == R.id.setting_button) {
 
+                    InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    im.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
                     if (mSpinnerAge == null) {
                         Snackbar.make(view, "年齢の選択がありません", Snackbar.LENGTH_LONG).show();
-                    } else if (mSexMale == null && mSexFemale == null) {
+                    } else if (mSex == null) {
                         Snackbar.make(view, "性別の選択がありません", Snackbar.LENGTH_LONG).show();
                     } else if (mEditTextUser == null) {
                         Snackbar.make(view, "ユーザー名がありません", Snackbar.LENGTH_LONG).show();
@@ -137,16 +145,13 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                         SharedPreferences.Editor editor = sharedPref.edit();
                         //Spinner形式はgetTextではなくgetSelectedItem
                         editor.putString("Age", mSpinnerAge.getSelectedItem().toString());
-                        if (mCheckBoxSexMale.isChecked() == true) {
-                            editor.putString("SexMale", mSexMale);
-                        }
-                        if (mCheckBoxSexFemale.isChecked() == true) {
-                            editor.putString("SexFemale", mSexFemale);
-                        }
+                        editor.putString("Sex", mSex);
                         editor.putString("User", mEditTextUser.getText().toString());
                         editor.apply();
-
                         Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
+
+                        settingsearch();
+
                     }
                 }
             }
@@ -168,7 +173,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             mProteinChart.getData().notifyDataChanged();
             mProteinChart.notifyDataSetChanged();
         } else {
-            Log.d("TESTEST", "チャートに入れる数値がありません");
+            Log.d("TESTTEST", "チャートに入れる数値がありません");
         }
         BarDataSet dataset = new BarDataSet(proteinchart, "Protein");
         return dataset;
@@ -198,4 +203,16 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     @Override
     public void onNothingSelected() {
     }
+
+    private void settingsearch(){
+        Realm mRealm = Realm.getDefaultInstance();
+        RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
+                .equalTo("Age",mSpinnerAge.getSelectedItem().toString())
+                .equalTo("Sex",mSex)
+                .equalTo("Nutrition","protein");
+        RealmResults<Nutritiondata> resultprotein = query.findAll();
+        Log.d("TESTTEST","Score is:"+resultprotein);
+
+    }
+
 }
