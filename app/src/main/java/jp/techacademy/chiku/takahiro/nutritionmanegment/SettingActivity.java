@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -39,8 +40,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     protected HorizontalBarChart mProteinChart;
     String mSex;
-    Spinner mSpinnerAge;
-
+    String spinnerage;
+    String mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,19 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mProteinChart.invalidate();
 
         final Spinner mSpinnerAge = (Spinner) findViewById(R.id.age_select);
+        mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner mSpinnerAge= (Spinner) parent;
+                spinnerage = (String) mSpinnerAge.getSelectedItem();
+                Log.d("TEST", "spinnerage0:" + spinnerage);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         final CheckBox mCheckBoxSexMale = (CheckBox) findViewById(R.id.checkbox1);
         mCheckBoxSexMale.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +137,11 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         });
 
         final EditText mEditTextUser = (EditText) findViewById(R.id.username_editText);
+        mEditTextUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mUser =mEditTextUser.getText().toString();}
+        });
 
         Button mButtonSetting = (Button) findViewById(R.id.setting_button);
         mButtonSetting.setOnClickListener(new View.OnClickListener() {
@@ -133,29 +152,31 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                     InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     im.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-                    if (mSpinnerAge == null) {
+                    if (spinnerage == "select your age") {
                         Snackbar.make(view, "年齢の選択がありません", Snackbar.LENGTH_LONG).show();
                     } else if (mSex == null) {
                         Snackbar.make(view, "性別の選択がありません", Snackbar.LENGTH_LONG).show();
-                    } else if (mEditTextUser == null) {
+                    } else if (mUser == null) {
                         Snackbar.make(view, "ユーザー名がありません", Snackbar.LENGTH_LONG).show();
                     } else {
                         //Context.MODE_PRIVATEはセキュリティレベルが：このアプリ限定を示す
                         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         //Spinner形式はgetTextではなくgetSelectedItem
-                        editor.putString("Age", mSpinnerAge.getSelectedItem().toString());
-                        editor.putString("Sex", mSex);
-                        editor.putString("User", mEditTextUser.getText().toString());
+                        editor.putString("age", spinnerage);
+                        editor.putString("sex", mSex);
+                        editor.putString("User", mUser);
                         editor.apply();
                         Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
-
+                        Log.d("TEST","spinnerage1:"+spinnerage);
+                        Log.d("TEST","sex1:"+mSex);
+                        Log.d("TEST","user1:"+mUser);
                         settingsearch();
-
                     }
                 }
             }
         });
+
     }
 
 
@@ -205,14 +226,13 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     }
 
     private void settingsearch(){
+        Log.d("TEST","spinnerage2:"+spinnerage);
         Realm mRealm = Realm.getDefaultInstance();
         RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
-                .equalTo("Age",mSpinnerAge.getSelectedItem().toString())
-                .equalTo("Sex",mSex)
-                .equalTo("Nutrition","protein");
+                .equalTo("age",spinnerage)
+                .equalTo("sex",mSex)
+                .equalTo("nutrition","protein");
         RealmResults<Nutritiondata> resultprotein = query.findAll();
-        Log.d("TESTTEST","Score is:"+resultprotein);
-
+        Log.d("TEST","Score:"+resultprotein);
     }
-
 }

@@ -6,6 +6,7 @@
     <string name="checkbox_female">女性</string>
 
     <string-array name="list">
+        <item>select your age</item>
         <item>0～5ヶ月</item>
         <item>6～8ヶ月</item>
         <item>9～11ヶ月</item>
