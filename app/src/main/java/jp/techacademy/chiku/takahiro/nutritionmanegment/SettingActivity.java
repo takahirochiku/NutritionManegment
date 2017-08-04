@@ -140,7 +140,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mEditTextUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mUser =mEditTextUser.getText().toString();}
+                }
         });
 
         Button mButtonSetting = (Button) findViewById(R.id.setting_button);
@@ -151,7 +151,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
                     InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     im.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
+                    mUser =mEditTextUser.getText().toString();
                     if (spinnerage == "select your age") {
                         Snackbar.make(view, "年齢の選択がありません", Snackbar.LENGTH_LONG).show();
                     } else if (mSex == null) {
@@ -227,12 +227,14 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     private void settingsearch(){
         Log.d("TEST","spinnerage2:"+spinnerage);
+        Log.d("TEST","sex2:"+mSex);
         Realm mRealm = Realm.getDefaultInstance();
         RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
                 .equalTo("age",spinnerage)
                 .equalTo("sex",mSex)
-                .equalTo("nutrition","protein");
-        RealmResults<Nutritiondata> resultprotein = query.findAll();
-        Log.d("TEST","Score:"+resultprotein);
+                .equalTo("nutrition","Protein_g");
+        Nutritiondata resultprotein = query.findFirst();
+        int amount = resultprotein.getAmount();
+        Log.d("TEST","Score:"+amount);
     }
 }
