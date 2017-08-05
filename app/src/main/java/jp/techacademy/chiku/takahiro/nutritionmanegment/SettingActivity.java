@@ -35,15 +35,19 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.Const.ProteinAmountPATH;
+
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     protected HorizontalBarChart mProteinChart;
+    protected HorizontalBarChart mCalorieChart;
+    protected HorizontalBarChart i;
     String mSex;
     String mAge;
     String mUser;
-    int mProteinAmount;
-    int mProteinAmount2;
-
+    String mProteinAmount;
+    String mProteinAmount2;
+    int mProteinAmount3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,42 +60,26 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart);
         mProteinChart.setOnChartValueSelectedListener(this);
+        mCalorieChart = (HorizontalBarChart) findViewById(R.id.calorie_chart);
+        mCalorieChart.setOnChartValueSelectedListener(this);
 
         //意味を確認する
-        mProteinChart.setDrawBarShadow(false);
-        mProteinChart.setDrawValueAboveBar(true);
-        mProteinChart.setPinchZoom(false);
-        mProteinChart.setDrawGridBackground(false);
-        mProteinChart.getDescription().setEnabled(false);
+        i = mProteinChart;
+        horizontalBarChartProtein();
+        horizontalBarChartProteinSetting1();
+        horizontalBarChartProteinSetting2();
+        horizontalBarChartProteinSetting3();
+        horizontalBarChartProteinSetting4();
 
-        XAxis xl = mProteinChart.getXAxis();
-        xl.setDrawAxisLine(false);
-        xl.setDrawGridLines(true);
-        xl.setGranularity(20f);
+        i = mCalorieChart;
+        horizontalBarChartProtein();
+        horizontalBarChartProteinSetting1();
+        horizontalBarChartProteinSetting2();
+        horizontalBarChartProteinSetting3();
+        horizontalBarChartProteinSetting4();
 
-        YAxis yl = mProteinChart.getAxisLeft();
-        yl.setDrawAxisLine(false);
-        yl.setDrawGridLines(false);
-        yl.setAxisMinimum(0f);
+        //sharedpreferenceGet();
 
-        YAxis yr = mProteinChart.getAxisRight();
-        yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-
-        yr.setDrawAxisLine(false);
-        yr.setDrawGridLines(false);
-        yl.setDrawLabels(false);
-        yr.setAxisMinimum(0f);
-
-        Legend l = mProteinChart.getLegend();
-        l.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
-        l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
-        l.setTextSize(12f);
-        l.setTextColor(Color.BLACK);
-        l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
-        l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
-
-
-        sharedpreferenceGet();
         BarData data = new BarData(getDataSet());
         mProteinChart.setData(data);
         mProteinChart.setFitBars(false);
@@ -169,8 +157,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     private BarDataSet getDataSet() {
         ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
-
-        proteinchart.add(new BarEntry(1f, mProteinAmount2));
+        //mProteinAmount3 = Integer.parseInt(mProteinAmount2);
+        proteinchart.add(new BarEntry(1f,100));
 
         BarDataSet set1;
 
@@ -221,27 +209,69 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                 .equalTo("sex",mSex)
                 .equalTo("nutrition","Protein_g");
         Nutritiondata resultprotein = query.findFirst();
-        mProteinAmount = resultprotein.getAmount();
+        mProteinAmount = String.valueOf(resultprotein.getAmount());
         Log.d("TEST","Score:"+mProteinAmount);
     }
 
+    private void horizontalBarChartProtein(){
+        i.setDrawBarShadow(false);
+        i.setDrawValueAboveBar(true);
+        i.setPinchZoom(false);
+        i.setDrawGridBackground(false);
+        i.getDescription().setEnabled(false);
+    }
+
+    private void horizontalBarChartProteinSetting1(){
+        XAxis xl = i.getXAxis();
+        xl.setDrawAxisLine(false);
+        xl.setDrawGridLines(true);
+        xl.setGranularity(20f);
+    }
+
+    private void horizontalBarChartProteinSetting2(){
+        YAxis yl = i.getAxisLeft();
+        yl.setDrawAxisLine(false);
+        yl.setDrawGridLines(false);
+        yl.setAxisMinimum(0f);
+    }
+
+    private void horizontalBarChartProteinSetting3() {
+        YAxis yr =i.getAxisRight();
+        yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        yr.setDrawAxisLine(false);
+        yr.setDrawGridLines(false);
+        yr.setDrawLabels(false);
+        yr.setAxisMinimum(0f);
+    }
+
+    private void horizontalBarChartProteinSetting4() {
+        Legend l = i.getLegend();
+        l.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
+        l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        l.setTextSize(12f);
+        l.setTextColor(Color.BLACK);
+        l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
+        l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
+    }
+    
     private void sharedpreference(View view){
     SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
     SharedPreferences.Editor editor = sharedPref.edit();
     //Spinner形式はgetTextではなくgetSelectedItem
-                        editor.putString(Const.AgePATH, mAge);
-                        editor.putString(Const.SexPATH, mSex);
-                        editor.putString(Const.NamePATH, mUser);
-                        editor.putInt(Const.ProteinAmountPATH, mProteinAmount);
-                        editor.commit();
-                        Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
-                        Log.d("TEST","spinnerage1:"+mAge);
-                        Log.d("TEST","sex1:"+mSex);
-                        Log.d("TEST","user1:"+mUser);
+        editor.putString(Const.AgePATH, mAge);
+        editor.putString(Const.SexPATH, mSex);
+        editor.putString(Const.NamePATH, mUser);
+        editor.putString(Const.ProteinAmountPATH, mProteinAmount);
+        editor.commit();
+        Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
+        Log.d("TEST","spinnerage1:"+mAge);
+        Log.d("TEST","sex1:"+mSex);
+        Log.d("TEST","user1:"+mUser);
     }
 
-    private void sharedpreferenceGet() {
+    /**private void sharedpreferenceGet() {
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        mProteinAmount2 = sharedPref.getInt(Const.ProteinAmountPATH,"proteinAmount");
-    }
+        mProteinAmount2 = sharedPref.getString(Const.ProteinAmountPATH);
+        Log.d("TEST","Constから引っ張った値:"+mProteinAmount2);
+    }*/
 }
