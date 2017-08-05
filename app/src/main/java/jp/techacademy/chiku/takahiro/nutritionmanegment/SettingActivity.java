@@ -34,7 +34,6 @@ import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
@@ -42,6 +41,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     String mSex;
     String spinnerage;
     String mUser;
+    int proteinAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,37 +63,33 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mProteinChart.getDescription().setEnabled(false);
 
         XAxis xl = mProteinChart.getXAxis();
-        //xl.setTypeface(mTfLight);
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(true);
         xl.setGranularity(20f);
 
         YAxis yl = mProteinChart.getAxisLeft();
-        //yl.setTypeface(mTfLight);
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
-        yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-//        yl.setInverted(true);
+        yl.setAxisMinimum(0f);
 
         YAxis yr = mProteinChart.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-        //yr.setTypeface(mTfLight);
+
         yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
         yl.setDrawLabels(false);
-        yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-//        yr.setInverted(true);
+        yr.setAxisMinimum(0f);
 
         Legend l = mProteinChart.getLegend();
-        //l.setFormSize(5f); // set the size of the legend forms/shapes
         l.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
         l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
-        //l.setTypeface(...);
         l.setTextSize(12f);
         l.setTextColor(Color.BLACK);
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
 
+
+        sharedpreferenceGet();
         BarData data = new BarData(getDataSet());
         mProteinChart.setData(data);
         mProteinChart.setFitBars(false);
@@ -140,7 +136,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mEditTextUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                }
+            }
         });
 
         Button mButtonSetting = (Button) findViewById(R.id.setting_button);
@@ -160,18 +156,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                         Snackbar.make(view, "ユーザー名がありません", Snackbar.LENGTH_LONG).show();
                     } else {
                         //Context.MODE_PRIVATEはセキュリティレベルが：このアプリ限定を示す
-                        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        //Spinner形式はgetTextではなくgetSelectedItem
-                        editor.putString("age", spinnerage);
-                        editor.putString("sex", mSex);
-                        editor.putString("User", mUser);
-                        editor.apply();
-                        Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
-                        Log.d("TEST","spinnerage1:"+spinnerage);
-                        Log.d("TEST","sex1:"+mSex);
-                        Log.d("TEST","user1:"+mUser);
                         settingsearch();
+                        sharedpreference(view);
                     }
                 }
             }
@@ -179,11 +165,10 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     }
 
-
     private BarDataSet getDataSet() {
         ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
 
-        proteinchart.add(new BarEntry(1f, 100));
+        proteinchart.add(new BarEntry(1f, proteinAmount));
 
         BarDataSet set1;
 
@@ -234,7 +219,27 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                 .equalTo("sex",mSex)
                 .equalTo("nutrition","Protein_g");
         Nutritiondata resultprotein = query.findFirst();
-        int amount = resultprotein.getAmount();
-        Log.d("TEST","Score:"+amount);
+        proteinAmount = resultprotein.getAmount();
+        Log.d("TEST","Score:"+proteinAmount);
+    }
+
+    private void sharedpreference(View view){
+    SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPref.edit();
+    //Spinner形式はgetTextではなくgetSelectedItem
+                        editor.putString("age", spinnerage);
+                        editor.putString("sex", mSex);
+                        editor.putString("User", mUser);
+                        editor.putInt("Amount", proteinAmount);
+                        editor.commit();
+                        Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
+                        Log.d("TEST","spinnerage1:"+spinnerage);
+                        Log.d("TEST","sex1:"+mSex);
+                        Log.d("TEST","user1:"+mUser);
+    }
+
+    private void sharedpreferenceGet() {
+        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        int height = sharedPref.getInt( "Amount","");
     }
 }
