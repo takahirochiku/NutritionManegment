@@ -256,6 +256,10 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
          //リーダー用の変数を宣言、Log.dでエラーにならないよう""を設定
         String line ="";
         try{
+            int count = 1;
+            //Realmインスタンスを取得
+            Realm realm = Realm.getDefaultInstance();
+
             //readLineで一行ずつでブレイクする
             while ((line = reader.readLine()) != null){
                 //エラーが発生した際にどの行で止まったのか見るLog
@@ -263,14 +267,21 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 //tokensとsplitで分割する
                 String[] tokens =line.split(",");
                 Nutritiondata standerdlist = new Nutritiondata();
-                standerdlist.setAge(tokens[2]);
+                standerdlist.setAge(tokens[0]);
                 standerdlist.setSex(tokens[1]);
-                standerdlist.setNutrition(tokens[0]);
+                standerdlist.setNutrition(tokens[2]);
                 standerdlist.setAmount(Integer.parseInt(tokens[3]));
+                standerdlist.setId(count);
                 nutritionLists.add(standerdlist);
 
+                //オブジェクトの追加や更新
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(standerdlist);
+                realm.commitTransaction();
+                count++;
                 Log.d("TESTTEST","Just created:"+standerdlist);
             }
+            realm.close();
         } catch (IOException e) {
             //エラーが発生した際にどの行が原因か見るLog
             Log.d("TESTTEST","Error reading data file on line" + line, e);
@@ -300,11 +311,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
         ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
-        //ArrayList<String> labels = new ArrayList<>();
-
-        //ラベル名
-        //labels.add("A");
-        //labels.add("B");
 
         //ゴール
         ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
@@ -319,27 +325,17 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         DataSet1.setColors(colors);
         DataSet1.setDrawValues(true);
 
-
-
         proteinchart_main.add(DataSet1);
 
         BarData barData = new BarData(proteinchart_main);
         barData.setBarWidth(5f);
-
-
         return barData;
-
     }
 
     private BarData createHorizontalBarChartData2(){
 
         ArrayList<IBarDataSet> caloriechart_main = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
-        //ArrayList<String> labels = new ArrayList<>();
-
-        //ラベル名
-        //labels.add("A");
-        //labels.add("B");
 
         //ゴール
         ArrayList<BarEntry> caloriechart1 = new ArrayList<>();
@@ -354,14 +350,10 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         DataSet1.setColors(colors);
         DataSet1.setDrawValues(true);
 
-
-
         caloriechart_main.add(DataSet1);
 
         BarData barData = new BarData(caloriechart_main);
         barData.setBarWidth(5f);
-
-
         return barData;
 
     }

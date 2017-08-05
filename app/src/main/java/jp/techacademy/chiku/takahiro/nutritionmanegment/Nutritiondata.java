@@ -26,7 +26,7 @@ public class Nutritiondata extends RealmObject implements Serializable {
     }
 
     public void setSex(String sex) {
-        this.age = sex;
+        this.sex = sex;
     }
 
     public String getNutrition() {
@@ -34,7 +34,7 @@ public class Nutritiondata extends RealmObject implements Serializable {
     }
 
     public void setNutrition(String nutrition) {
-        this.age = nutrition;
+        this.nutrition = nutrition;
     }
 
     public int getAmount() {
@@ -43,6 +43,14 @@ public class Nutritiondata extends RealmObject implements Serializable {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

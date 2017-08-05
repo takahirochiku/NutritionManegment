@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
@@ -42,12 +43,16 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     protected HorizontalBarChart mProteinChart;
     protected HorizontalBarChart mCalorieChart;
     protected HorizontalBarChart i;
+    protected ArrayList<BarEntry> iList;
+    String NutritionName;
     String mSex;
     String mAge;
     String mUser;
     String mProteinAmount;
     String mProteinAmount2;
     int mProteinAmount3;
+
+    protected RectF mOnValueSelectedRectF = new RectF();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,27 +69,29 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mCalorieChart.setOnChartValueSelectedListener(this);
 
         //意味を確認する
+        ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
         i = mProteinChart;
-        horizontalBarChartProtein();
-        horizontalBarChartProteinSetting1();
-        horizontalBarChartProteinSetting2();
-        horizontalBarChartProteinSetting3();
-        horizontalBarChartProteinSetting4();
+        NutritionName ="Protein";
+        iList = proteinchart;
+        horizontalBarChart();
+        horizontalBarChartSetting1();
+        horizontalBarChartSetting2();
+        horizontalBarChartSetting3();
+        horizontalBarChartSetting4();
+        horizontalBarChartProcess();
 
+        ArrayList<BarEntry> caloriechart = new ArrayList<BarEntry>();
         i = mCalorieChart;
-        horizontalBarChartProtein();
-        horizontalBarChartProteinSetting1();
-        horizontalBarChartProteinSetting2();
-        horizontalBarChartProteinSetting3();
-        horizontalBarChartProteinSetting4();
+        NutritionName ="Calorie";
+        iList = caloriechart;
+        horizontalBarChart();
+        horizontalBarChartSetting1();
+        horizontalBarChartSetting2();
+        horizontalBarChartSetting3();
+        horizontalBarChartSetting4();
+        horizontalBarChartProcess();
 
         //sharedpreferenceGet();
-
-        BarData data = new BarData(getDataSet());
-        mProteinChart.setData(data);
-        mProteinChart.setFitBars(false);
-        mProteinChart.animateY(2500);
-        mProteinChart.invalidate();
 
         final Spinner mSpinnerAge = (Spinner) findViewById(R.id.age_select);
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -155,29 +162,6 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     }
 
-    private BarDataSet getDataSet() {
-        ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
-        //mProteinAmount3 = Integer.parseInt(mProteinAmount2);
-        proteinchart.add(new BarEntry(1f,100));
-
-        BarDataSet set1;
-
-        if (mProteinChart.getData() != null &&
-                mProteinChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) mProteinChart.getData().getDataSetByIndex(0);
-            set1.setValues(proteinchart);
-            mProteinChart.getData().notifyDataChanged();
-            mProteinChart.notifyDataSetChanged();
-        } else {
-            Log.d("TESTTEST", "チャートに入れる数値がありません");
-        }
-        BarDataSet dataset = new BarDataSet(proteinchart, "Protein");
-        return dataset;
-    }
-
-    protected RectF mOnValueSelectedRectF = new RectF();
-
-    @SuppressLint("NewApi")
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
@@ -213,29 +197,29 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         Log.d("TEST","Score:"+mProteinAmount);
     }
 
-    private void horizontalBarChartProtein(){
-        i.setDrawBarShadow(false);
+    private void horizontalBarChart(){
+        i.setDrawBarShadow(true);
         i.setDrawValueAboveBar(true);
         i.setPinchZoom(false);
         i.setDrawGridBackground(false);
         i.getDescription().setEnabled(false);
     }
 
-    private void horizontalBarChartProteinSetting1(){
+    private void horizontalBarChartSetting1(){
         XAxis xl = i.getXAxis();
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(true);
         xl.setGranularity(20f);
     }
 
-    private void horizontalBarChartProteinSetting2(){
+    private void horizontalBarChartSetting2(){
         YAxis yl = i.getAxisLeft();
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
         yl.setAxisMinimum(0f);
     }
 
-    private void horizontalBarChartProteinSetting3() {
+    private void horizontalBarChartSetting3() {
         YAxis yr =i.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         yr.setDrawAxisLine(false);
@@ -244,7 +228,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         yr.setAxisMinimum(0f);
     }
 
-    private void horizontalBarChartProteinSetting4() {
+    private void horizontalBarChartSetting4() {
         Legend l = i.getLegend();
         l.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
         l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
@@ -253,7 +237,34 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
     }
-    
+
+    private void horizontalBarChartProcess(){
+        BarData data = new BarData(getDataSet());
+        i.setData(data);
+        i.setFitBars(false);
+        i.animateY(2500);
+        i.invalidate();
+    }
+
+    private BarDataSet getDataSet() {
+        //mProteinAmount3 = Integer.parseInt(mProteinAmount2);
+        iList.add(new BarEntry(1f,100));
+
+        BarDataSet set1;
+
+        if (i.getData() != null &&
+                i.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) i.getData().getDataSetByIndex(0);
+            set1.setValues(iList);
+            i.getData().notifyDataChanged();
+            i.notifyDataSetChanged();
+        } else {
+            Log.d("TESTTEST", "チャートに入れる数値がありません");
+        }
+        BarDataSet dataset = new BarDataSet(iList,NutritionName);
+        return dataset;
+    }
+
     private void sharedpreference(View view){
     SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
     SharedPreferences.Editor editor = sharedPref.edit();
