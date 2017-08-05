@@ -39,9 +39,11 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     protected HorizontalBarChart mProteinChart;
     String mSex;
-    String spinnerage;
+    String mAge;
     String mUser;
-    int proteinAmount;
+    int mProteinAmount;
+    int mProteinAmount2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +103,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner mSpinnerAge= (Spinner) parent;
-                spinnerage = (String) mSpinnerAge.getSelectedItem();
-                Log.d("TEST", "spinnerage0:" + spinnerage);
+                mAge = (String) mSpinnerAge.getSelectedItem();
+                Log.d("TEST", "spinnerage0:" + mAge);
             }
 
             @Override
@@ -148,7 +150,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                     InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     im.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     mUser =mEditTextUser.getText().toString();
-                    if (spinnerage == "select your age") {
+                    if (mAge == "select your age") {
                         Snackbar.make(view, "年齢の選択がありません", Snackbar.LENGTH_LONG).show();
                     } else if (mSex == null) {
                         Snackbar.make(view, "性別の選択がありません", Snackbar.LENGTH_LONG).show();
@@ -168,7 +170,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     private BarDataSet getDataSet() {
         ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
 
-        proteinchart.add(new BarEntry(1f, proteinAmount));
+        proteinchart.add(new BarEntry(1f, mProteinAmount2));
 
         BarDataSet set1;
 
@@ -211,35 +213,35 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     }
 
     private void settingsearch(){
-        Log.d("TEST","spinnerage2:"+spinnerage);
+        Log.d("TEST","spinnerage2:"+mAge);
         Log.d("TEST","sex2:"+mSex);
         Realm mRealm = Realm.getDefaultInstance();
         RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
-                .equalTo("age",spinnerage)
+                .equalTo("age",mAge)
                 .equalTo("sex",mSex)
                 .equalTo("nutrition","Protein_g");
         Nutritiondata resultprotein = query.findFirst();
-        proteinAmount = resultprotein.getAmount();
-        Log.d("TEST","Score:"+proteinAmount);
+        mProteinAmount = resultprotein.getAmount();
+        Log.d("TEST","Score:"+mProteinAmount);
     }
 
     private void sharedpreference(View view){
     SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
     SharedPreferences.Editor editor = sharedPref.edit();
     //Spinner形式はgetTextではなくgetSelectedItem
-                        editor.putString("age", spinnerage);
-                        editor.putString("sex", mSex);
-                        editor.putString("User", mUser);
-                        editor.putInt("Amount", proteinAmount);
+                        editor.putString(Const.AgePATH, mAge);
+                        editor.putString(Const.SexPATH, mSex);
+                        editor.putString(Const.NamePATH, mUser);
+                        editor.putInt(Const.ProteinAmountPATH, mProteinAmount);
                         editor.commit();
                         Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
-                        Log.d("TEST","spinnerage1:"+spinnerage);
+                        Log.d("TEST","spinnerage1:"+mAge);
                         Log.d("TEST","sex1:"+mSex);
                         Log.d("TEST","user1:"+mUser);
     }
 
     private void sharedpreferenceGet() {
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        int height = sharedPref.getInt( "Amount","");
+        mProteinAmount2 = sharedPref.getInt(Const.ProteinAmountPATH,"proteinAmount");
     }
 }
