@@ -5,8 +5,8 @@ public class Const {
     public static final String SexPATH = "sex";
     public static final String NamePATH = "name";
     public static final String ProteinAmountPATH = "proteinamount";
-    //public static final int CalorieAmountPATH = "calorieAmount";
-    //public static final int FiberAmountPATH = "fiberAmount";
-    //public static final int CalciumAmountPATH ="calciumAmount";
+    public static final String CalorieAmountPATH = "calorieAmount";
+    public static final String FiberAmountPATH = "fiberAmount";
+    public static final String CalciumAmountPATH ="calciumAmount";
 
 }

@@ -37,13 +37,14 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.Const.ProteinAmountPATH;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.array.list;
 
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     protected HorizontalBarChart mProteinChart;
     protected HorizontalBarChart mCalorieChart;
-    protected HorizontalBarChart i;
-    protected ArrayList<BarEntry> iList;
+    protected HorizontalBarChart mFiberChart;
+    protected HorizontalBarChart mCalciumChart;
     String NutritionName;
     String mSex;
     String mAge;
@@ -51,6 +52,12 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     String mProteinAmount;
     String mProteinAmount2;
     int mProteinAmount3;
+    String mCalorieAmount;
+    String mCalorieAmount2;
+    String  mFiberAmount;
+    String  mFiberAmount2;
+    String  mCalciumAmount;
+    String  mCalciumAmount2;
 
     protected RectF mOnValueSelectedRectF = new RectF();
 
@@ -67,31 +74,27 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mProteinChart.setOnChartValueSelectedListener(this);
         mCalorieChart = (HorizontalBarChart) findViewById(R.id.calorie_chart);
         mCalorieChart.setOnChartValueSelectedListener(this);
+        mFiberChart = (HorizontalBarChart) findViewById(R.id.fiber_chart);
+        mFiberChart.setOnChartValueSelectedListener(this);
+        mCalciumChart = (HorizontalBarChart) findViewById(R.id.calcium_chart);
+        mCalciumChart.setOnChartValueSelectedListener(this);
 
-        //意味を確認する
-        ArrayList<BarEntry> proteinchart = new ArrayList<BarEntry>();
-        i = mProteinChart;
-        NutritionName ="Protein";
-        iList = proteinchart;
-        horizontalBarChart();
-        horizontalBarChartSetting1();
-        horizontalBarChartSetting2();
-        horizontalBarChartSetting3();
-        horizontalBarChartSetting4();
-        horizontalBarChartProcess();
+        sharedpreferenceGet();
 
-        ArrayList<BarEntry> caloriechart = new ArrayList<BarEntry>();
-        i = mCalorieChart;
-        NutritionName ="Calorie";
-        iList = caloriechart;
-        horizontalBarChart();
-        horizontalBarChartSetting1();
-        horizontalBarChartSetting2();
-        horizontalBarChartSetting3();
-        horizontalBarChartSetting4();
-        horizontalBarChartProcess();
+        ArrayList<HorizontalBarChart>list = new ArrayList<>();
+        list.add(mProteinChart);
+        list.add(mCalorieChart);
+        list.add(mFiberChart);
+        list.add(mCalciumChart);
 
-        //sharedpreferenceGet();
+        for (HorizontalBarChart chart:list) {
+            setChart(chart);
+            getXAxis(chart);
+            getAxisLeft(chart);
+            getAxisRight(chart);
+            getLegend(chart);
+            barData(chart);
+        }
 
         final Spinner mSpinnerAge = (Spinner) findViewById(R.id.age_select);
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -184,43 +187,30 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     public void onNothingSelected() {
     }
 
-    private void settingsearch(){
-        Log.d("TEST","spinnerage2:"+mAge);
-        Log.d("TEST","sex2:"+mSex);
-        Realm mRealm = Realm.getDefaultInstance();
-        RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
-                .equalTo("age",mAge)
-                .equalTo("sex",mSex)
-                .equalTo("nutrition","Protein_g");
-        Nutritiondata resultprotein = query.findFirst();
-        mProteinAmount = String.valueOf(resultprotein.getAmount());
-        Log.d("TEST","Score:"+mProteinAmount);
+    public void setChart(HorizontalBarChart chart){
+        chart.setDrawBarShadow(true);
+        chart.setDrawValueAboveBar(true);
+        chart.setPinchZoom(false);
+        chart.setDrawGridBackground(false);
+        chart.getDescription().setEnabled(false);
     }
 
-    private void horizontalBarChart(){
-        i.setDrawBarShadow(true);
-        i.setDrawValueAboveBar(true);
-        i.setPinchZoom(false);
-        i.setDrawGridBackground(false);
-        i.getDescription().setEnabled(false);
-    }
-
-    private void horizontalBarChartSetting1(){
-        XAxis xl = i.getXAxis();
+    public void getXAxis(HorizontalBarChart chart){
+        XAxis xl = chart.getXAxis();
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(true);
         xl.setGranularity(20f);
     }
 
-    private void horizontalBarChartSetting2(){
-        YAxis yl = i.getAxisLeft();
+    public void getAxisLeft(HorizontalBarChart chart) {
+        YAxis yl = chart.getAxisLeft();
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
         yl.setAxisMinimum(0f);
     }
 
-    private void horizontalBarChartSetting3() {
-        YAxis yr =i.getAxisRight();
+    public void getAxisRight(HorizontalBarChart chart) {
+        YAxis yr = chart.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
@@ -228,8 +218,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         yr.setAxisMinimum(0f);
     }
 
-    private void horizontalBarChartSetting4() {
-        Legend l = i.getLegend();
+    public void getLegend(HorizontalBarChart chart) {
+        Legend l = chart.getLegend();
         l.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
         l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
         l.setTextSize(12f);
@@ -238,31 +228,69 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
     }
 
-    private void horizontalBarChartProcess(){
-        BarData data = new BarData(getDataSet());
-        i.setData(data);
-        i.setFitBars(false);
-        i.animateY(2500);
-        i.invalidate();
+    public void barData(HorizontalBarChart chart){
+        BarData data = new BarData(getDataSet(chart));
+        chart.setData(data);
+        chart.setFitBars(false);
+        chart.animateY(2500);
+        chart.invalidate();
     }
 
-    private BarDataSet getDataSet() {
-        //mProteinAmount3 = Integer.parseInt(mProteinAmount2);
-        iList.add(new BarEntry(1f,100));
+    private BarDataSet getDataSet(HorizontalBarChart chart) {
+        ArrayList<BarEntry>barEntryList = new ArrayList<>();
+        mProteinAmount3 = Integer.parseInt(mProteinAmount2);
+        barEntryList.add(new BarEntry(1f,mProteinAmount3));
 
         BarDataSet set1;
 
-        if (i.getData() != null &&
-                i.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) i.getData().getDataSetByIndex(0);
-            set1.setValues(iList);
-            i.getData().notifyDataChanged();
-            i.notifyDataSetChanged();
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(barEntryList);
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
         } else {
             Log.d("TESTTEST", "チャートに入れる数値がありません");
         }
-        BarDataSet dataset = new BarDataSet(iList,NutritionName);
+        BarDataSet dataset = new BarDataSet(barEntryList,NutritionName);
         return dataset;
+    }
+
+    private void settingsearch(){
+        Log.d("TEST","spinnerage2:"+mAge);
+        Log.d("TEST","sex2:"+mSex);
+        Realm mRealm = Realm.getDefaultInstance();
+
+        RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
+                .equalTo("age",mAge)
+                .equalTo("sex",mSex)
+                .equalTo("nutrition","Protein_g");
+        Nutritiondata resultProtein = query.findFirst();
+        mProteinAmount = String.valueOf(resultProtein.getAmount());
+
+        RealmQuery<Nutritiondata> query2 = mRealm.where(Nutritiondata.class)
+                .equalTo("age",mAge)
+                .equalTo("sex",mSex)
+                .equalTo("nutrition","Calorie_cal");
+        Nutritiondata resultCalorie = query2.findFirst();
+        mCalorieAmount = String.valueOf(resultCalorie.getAmount());
+        Log.d("TEST","Score:"+mCalorieAmount);
+
+        RealmQuery<Nutritiondata> query3 = mRealm.where(Nutritiondata.class)
+                .equalTo("age",mAge)
+                .equalTo("sex",mSex)
+                .equalTo("nutrition","Fiber_g");
+        Nutritiondata resultFiber = query3.findFirst();
+        mFiberAmount = String.valueOf(resultFiber.getAmount());
+        Log.d("TEST","Score:"+mFiberAmount);
+
+        RealmQuery<Nutritiondata> query4 = mRealm.where(Nutritiondata.class)
+                .equalTo("age",mAge)
+                .equalTo("sex",mSex)
+                .equalTo("nutrition","Calcium_mg");
+        Nutritiondata resultCalcium = query4.findFirst();
+        mCalciumAmount = String.valueOf(resultCalcium.getAmount());
+        Log.d("TEST","Score:"+mCalciumAmount);
     }
 
     private void sharedpreference(View view){
@@ -273,6 +301,9 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         editor.putString(Const.SexPATH, mSex);
         editor.putString(Const.NamePATH, mUser);
         editor.putString(Const.ProteinAmountPATH, mProteinAmount);
+        editor.putString(Const.CalorieAmountPATH,mCalorieAmount);
+        editor.putString(Const.FiberAmountPATH,mFiberAmount);
+        editor.putString(Const.CalciumAmountPATH,mCalciumAmount);
         editor.commit();
         Snackbar.make(view, "Setting success", Snackbar.LENGTH_LONG).show();
         Log.d("TEST","spinnerage1:"+mAge);
@@ -280,9 +311,16 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         Log.d("TEST","user1:"+mUser);
     }
 
-    /**private void sharedpreferenceGet() {
+    private void sharedpreferenceGet() {
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        mProteinAmount2 = sharedPref.getString(Const.ProteinAmountPATH);
+        mProteinAmount2 = sharedPref.getString(Const.ProteinAmountPATH,"0");
+        mCalorieAmount2 = sharedPref.getString(Const.CalorieAmountPATH,"0");
+        mFiberAmount2 = sharedPref.getString(Const.FiberAmountPATH,"0");
+        mCalciumAmount2 = sharedPref.getString(Const.CalciumAmountPATH,"0");
         Log.d("TEST","Constから引っ張った値:"+mProteinAmount2);
-    }*/
+        Log.d("TEST","Constから引っ張った値:"+mCalorieAmount2);
+        Log.d("TEST","Constから引っ張った値:"+mFiberAmount2);
+        Log.d("TEST","Constから引っ張った値:"+ mCalciumAmount2);
+
+    }
 }
