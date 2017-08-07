@@ -10,6 +10,8 @@ public class Nutritiondata extends RealmObject implements Serializable {
     private String sex; // 性別
     private String nutrition; //栄養素
     private int amount; //推奨摂取量
+
+
     @PrimaryKey
     private int id;
 

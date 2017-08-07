@@ -39,20 +39,18 @@ tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity"
     android:layout_height="wrap_content"
     tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity">
 
-    <CheckBox
-        android:id="@+id/checkbox1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/checkbox_male"
-        android:onClick="onCheckboxClicked"/>
-
-    <CheckBox
-        android:id="@+id/checkbox2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/checkbox_female"
-        android:layout_toRightOf="@+id/checkbox1"
-        android:onClick="onCheckboxClicked"/>
+    <RadioGroup android:id="@+id/radiogroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <RadioButton android:id="@+id/radiobutton_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="男性" />
+        <RadioButton android:id="@+id/radiobutton_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="女性" />
+    </RadioGroup>
 
 </RelativeLayout>
 

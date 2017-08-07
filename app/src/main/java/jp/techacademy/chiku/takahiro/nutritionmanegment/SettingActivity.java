@@ -1,6 +1,5 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,7 +13,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -38,9 +36,6 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 
-import static jp.techacademy.chiku.takahiro.nutritionmanegment.Const.ProteinAmountPATH;
-import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.array.list;
-
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     protected HorizontalBarChart mProteinChart;
@@ -48,7 +43,6 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     protected HorizontalBarChart mFiberChart;
     protected HorizontalBarChart mCalciumChart;
     Spinner mSpinnerAge;
-    int mAgecall;
     String NutritionName;
     String mSex;
     String mAge;
@@ -367,7 +361,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     }*/
 
-    private void sharedpreferenceGet() {
+    public void sharedpreferenceGet() {
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         mProteinAmount2 = sharedPref.getString(Const.ProteinAmountPATH,"0");
         mCalorieAmount2 = sharedPref.getString(Const.CalorieAmountPATH,"0");

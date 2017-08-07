@@ -30,7 +30,7 @@
         android:background="@android:color/white" />
 
     <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/fiver_chart2"
+        android:id="@+id/fiber_chart2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_below="@id/fiver_chart2"
+        android:layout_below="@id/fiber_chart2"
         android:background="@android:color/white" />
 
 </LinearLayout>
