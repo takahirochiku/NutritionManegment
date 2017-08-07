@@ -45,7 +45,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     protected HorizontalBarChart mCalorieChart;
     protected HorizontalBarChart mFiberChart;
     protected HorizontalBarChart mCalciumChart;
-    final Spinner mSpinnerAge;
+    Spinner mSpinnerAge;
+    int mAgecall;
     String NutritionName;
     String mSex;
     String mAge;
@@ -81,7 +82,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mCalciumChart = (HorizontalBarChart) findViewById(R.id.calcium_chart);
         mCalciumChart.setOnChartValueSelectedListener(this);
 
-        sharedpreferenceCall();
+        //sharedpreferenceCall();
+        //((Spinner) findViewById(R.id.age_select)).setSelection(mAgecall);
         sharedpreferenceGet();
 
         ArrayList<HorizontalBarChart>list = new ArrayList<>();
@@ -99,7 +101,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             barData(chart);
         }
 
-        final Spinner mSpinnerAge = (Spinner) findViewById(R.id.age_select);
+        mSpinnerAge = (Spinner) findViewById(R.id.age_select);
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -352,14 +354,24 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         Log.d("TEST","user1:"+mUser);
     }
 
-    private void sharedpreferenceCall(){
+    /**private void sharedpreferenceCall(){
 
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String mAgeCall = sharedPref.getString(Const.AgePATH, "select your age");
+        String mAgeCall = sharedPref.getString(Const.AgePATH, "値無し");
         String  mSexCall = sharedPref.getString(Const.AgePATH,"");
         String mNameCall = sharedPref.getString(Const.NamePATH,"");
 
-    }
+        Log.d("TEST","mAgeCallの値："+mAgeCall);
+
+        Realm mRealm = Realm.getDefaultInstance();
+        RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
+                .equalTo("age",mAgeCall);
+        Nutritiondata resultProtein = query.findFirst();
+        int mAgecall = resultProtein.getId();
+
+        Log.d("TEST","mAgeCall2の値："+mAgecall);
+
+    }*/
 
     private void sharedpreferenceGet() {
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
