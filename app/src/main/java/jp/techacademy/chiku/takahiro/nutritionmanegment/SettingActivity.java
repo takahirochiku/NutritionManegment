@@ -45,10 +45,12 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     protected HorizontalBarChart mCalorieChart;
     protected HorizontalBarChart mFiberChart;
     protected HorizontalBarChart mCalciumChart;
+    final Spinner mSpinnerAge;
     String NutritionName;
     String mSex;
     String mAge;
     String mUser;
+    String mAmount;
     String mProteinAmount;
     String mProteinAmount2;
     int mProteinAmount3;
@@ -79,6 +81,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mCalciumChart = (HorizontalBarChart) findViewById(R.id.calcium_chart);
         mCalciumChart.setOnChartValueSelectedListener(this);
 
+        sharedpreferenceCall();
         sharedpreferenceGet();
 
         ArrayList<HorizontalBarChart>list = new ArrayList<>();
@@ -203,9 +206,23 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     }
 
     public void getAxisLeft(HorizontalBarChart chart) {
+
+        int mMaxium =0;
+
+        if (chart == mProteinChart){
+            mMaxium = 70;
+        }else if(chart == mCalorieChart){
+            mMaxium = 3000;
+        }else if(chart == mFiberChart){
+            mMaxium = 25;
+        }else if(chart == mCalciumChart){
+            mMaxium = 1000;
+        }
+
         YAxis yl = chart.getAxisLeft();
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
+        yl.setAxisMaximum(mMaxium);
         yl.setAxisMinimum(0f);
     }
 
@@ -238,7 +255,27 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     private BarDataSet getDataSet(HorizontalBarChart chart) {
         ArrayList<BarEntry>barEntryList = new ArrayList<>();
-        mProteinAmount3 = Integer.parseInt(mProteinAmount2);
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        if (chart == mProteinChart){
+            NutritionName = "Protein";
+            mAmount = mProteinAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[0]);
+        }else if(chart == mCalorieChart){
+            NutritionName = "Calorie";
+            mAmount = mCalorieAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[1]);
+        }else if(chart == mFiberChart){
+            NutritionName = "Fiber";
+            mAmount = mFiberAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[2]);
+        }else if(chart == mCalciumChart){
+            NutritionName = "Calorie";
+            mAmount = mCalciumAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[3]);
+        }
+
+        mProteinAmount3 = Integer.parseInt(mAmount);
         barEntryList.add(new BarEntry(1f,mProteinAmount3));
 
         BarDataSet set1;
@@ -252,7 +289,11 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         } else {
             Log.d("TESTTEST", "チャートに入れる数値がありません");
         }
+
         BarDataSet dataset = new BarDataSet(barEntryList,NutritionName);
+        dataset.setColors(colors);
+        dataset.setDrawValues(true);
+
         return dataset;
     }
 
@@ -309,6 +350,15 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         Log.d("TEST","spinnerage1:"+mAge);
         Log.d("TEST","sex1:"+mSex);
         Log.d("TEST","user1:"+mUser);
+    }
+
+    private void sharedpreferenceCall(){
+
+        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        String mAgeCall = sharedPref.getString(Const.AgePATH, "select your age");
+        String  mSexCall = sharedPref.getString(Const.AgePATH,"");
+        String mNameCall = sharedPref.getString(Const.NamePATH,"");
+
     }
 
     private void sharedpreferenceGet() {
