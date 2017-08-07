@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -116,23 +118,15 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             }
         });
 
-        final CheckBox mCheckBoxSexMale = (CheckBox) findViewById(R.id.checkbox1);
-        mCheckBoxSexMale.setOnClickListener(new View.OnClickListener() {
+        final RadioGroup mRadioGroup= (RadioGroup) findViewById(R.id.radiogroup);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 //checkbox形式はisCheckedでtrueが変える場合、変数に値を代入させる
-                if (mCheckBoxSexMale.isChecked() == true) {
-                    mSex = new String("男性");
-                }
-            }
-        });
-
-        final CheckBox mCheckBoxSexFemale = (CheckBox) findViewById(R.id.checkbox2);
-        mCheckBoxSexFemale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCheckBoxSexFemale.isChecked() == true) {
-                    mSex = new String("女性");
+                if (checkedId != -1) {
+                    //mSex = new String("男性");
+                    RadioButton mRadioButton = (RadioButton) findViewById(checkedId);
+                    mSex = mRadioButton.getText().toString();
                 }
             }
         });
