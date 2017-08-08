@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     String mFiberAmount2;
     String mCalciumAmount2;
 
+    float groupSpace = 0.06f;
+    float barSpace = 0.06f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -86,9 +89,17 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle("トップ");
+        setTitle("トップ!!");
 
         readNutritionData();
+
+        ConstGet();
+        Log.d("TEST","Protein値;"+mProteinAmount2);
+        Log.d("TEST","Calorie値;"+mCalorieAmount2);
+        Log.d("TEST","Fiber値;"+mFiberAmount2);
+        Log.d("TEST","Calcium値;"+mCalciumAmount2);
+
+
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
         mProteinChart.setOnChartValueSelectedListener(this);
@@ -96,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mCalorieChart.setOnChartValueSelectedListener(this);
         mFiberChart = (HorizontalBarChart) findViewById(R.id.fiber_chart2);
         mFiberChart.setOnChartValueSelectedListener(this);
-        mCalciumChart = (HorizontalBarChart) findViewById(R.id.calorie_chart2);
+        mCalciumChart = (HorizontalBarChart) findViewById(R.id.calcuim_chart2);
         mCalciumChart.setOnChartValueSelectedListener(this);
 
         ArrayList<HorizontalBarChart>list = new ArrayList<>();
@@ -227,16 +238,30 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void getAxisLeft(HorizontalBarChart chart) {
+        int mMaxium =0;
+
+        if (chart == mProteinChart){
+            mMaxium = 70;
+        }else if(chart == mCalorieChart){
+            mMaxium = 3000;
+        }else if(chart == mFiberChart){
+            mMaxium = 25;
+        }else if(chart == mCalciumChart){
+            mMaxium = 1000;
+        }
+
         YAxis yl = chart.getAxisLeft();
         //yl.setTypeface(mTfLight);
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
         yl.setDrawLabels(false);
+        yl.setAxisMaximum(mMaxium);
         yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yl.setInverted(true);
     }
 
     public void getAxisRight(HorizontalBarChart chart) {
+
         YAxis yr = chart.getAxisRight();
         yr.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         //yr.setTypeface(mTfLight);
@@ -248,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void getLegend(HorizontalBarChart chart) {
-        Legend l = mProteinChart.getLegend();
+        Legend l = chart.getLegend();
         //l.setFormSize(5f); // set the size of the legend forms/shapes
         l.setForm(Legend.LegendForm.SQUARE); // set what type of form/shape should be used
         l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
@@ -260,10 +285,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void barData(HorizontalBarChart chart) {
-        mProteinChart.setData(createHorizontalBarChartData(chart));
-        mProteinChart.setFitBars(true);
-        mProteinChart.invalidate();
-        mProteinChart.animateY(2000);
+        chart.setData(createHorizontalBarChartData(chart));
+        //chart.groupBars(1980f,groupSpace);
+        chart.setFitBars(true);
+        chart.invalidate();
+        chart.animateY(2000);
     }
 
     /*private void reloadListView() {
@@ -284,58 +310,61 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     private BarData createHorizontalBarChartData(HorizontalBarChart chart){
 
-        ArrayList<IBarDataSet> proteinchart_main = new ArrayList<>();
+        ArrayList<IBarDataSet> chart1 = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
-
-        //ゴール
-        ArrayList<BarEntry> proteinchart1 = new ArrayList<>();
-
-        ConstGet();
 
         if (chart == mProteinChart){
             NutritionName = "Protein";
             mAmount = mProteinAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[0]);
         }else if(chart == mCalorieChart){
             NutritionName = "Calorie";
             mAmount = mCalorieAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[1]);
         }else if(chart == mFiberChart){
             NutritionName = "Fiber";
             mAmount = mFiberAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[2]);
         }else if(chart == mCalciumChart){
-            NutritionName = "Calorie";
-            mAmount = mCalciumAmount2 ;
+            NutritionName = "Calcium";
+            mAmount = mCalciumAmount2;
+            colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[3]);
         }
-        proteinchart1.add(new BarEntry(3f, 100));
-        proteinchart1.add(new BarEntry(10f, 200));
 
-        BarDataSet set1;
 
-        if (chart.getData() != null &&
+        ArrayList<BarEntry> chart2 = new ArrayList<>();
+        int mAmount2=Integer.parseInt(mAmount);
+
+        chart2.add(new BarEntry(1f,10));
+        chart2.add(new BarEntry(2f, mAmount2));
+
+        //BarDataSet DataSet1;
+
+        /**if (chart.getData() != null &&
                 chart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
-            set1.setValues(proteinchart1);
+            set1.setValues(chart2);
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
         } else {
             Log.d("TESTTEST", "チャートに入れる数値がありません");
-        }
+        }*/
 
-        BarDataSet DataSet1 = new BarDataSet(proteinchart1,"NutritionName");
+        BarDataSet DataSet1 = new BarDataSet(chart2,NutritionName);
+        DataSet1.setBarBorderWidth(1f);
 
         // 色の設定
-        colors.add(ColorTemplate.COLORFUL_COLORS[0]);
-        colors.add(ColorTemplate.COLORFUL_COLORS[1]);
+        //colors.add(ColorTemplate.COLORFUL_COLORS[1]);
         DataSet1.setColors(colors);
         DataSet1.setDrawValues(true);
 
-        proteinchart_main.add(DataSet1);
+        chart1.add(DataSet1);
 
-        BarData barData = new BarData(proteinchart_main);
-        barData.setBarWidth(5f);
+        BarData barData = new BarData(chart1);
         return barData;
     }
 
