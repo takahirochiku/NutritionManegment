@@ -78,7 +78,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mCalciumChart = (HorizontalBarChart) findViewById(R.id.calcium_chart);
         mCalciumChart.setOnChartValueSelectedListener(this);
 
-        //sharedpreferenceCall();
+        sharedpreferenceCall();
         //((Spinner) findViewById(R.id.age_select)).setSelection(mAgecall);
         sharedpreferenceGet();
 
@@ -98,11 +98,19 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         }
 
         mSpinnerAge = (Spinner) findViewById(R.id.age_select);
+        String[] AgeList = getResources().getStringArray(R.array.list);
+        for(int i =0;i<AgeList.length;i++){
+            if(mAge.equals(AgeList[i])){
+                mSpinnerAge.setSelection(i);
+            break;
+            }
+        }
+
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Spinner mSpinnerAge= (Spinner) parent;
-                mAge = (String) mSpinnerAge.getSelectedItem();
+                //Spinner mSpinnerAge= (Spinner) parent;
+                //mAge = (String) mSpinnerAge.getSelectedItem();
                 Log.d("TEST", "spinnerage0:" + mAge);
             }
 
@@ -113,6 +121,11 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         });
 
         final RadioGroup mRadioGroup= (RadioGroup) findViewById(R.id.radiogroup);
+         if(mSex.equals("男性")){
+             mRadioGroup.check(R.id.radiobutton_male);
+         }else{
+             mRadioGroup.check(R.id.radiobutton_female);
+         }
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -126,6 +139,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         });
 
         final EditText mEditTextUser = (EditText) findViewById(R.id.username_editText);
+        mEditTextUser.setText(mUser);
         mEditTextUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -342,24 +356,24 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         Log.d("TEST","user1:"+mUser);
     }
 
-    /**private void sharedpreferenceCall(){
+    private void sharedpreferenceCall(){
 
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String mAgeCall = sharedPref.getString(Const.AgePATH, "値無し");
-        String  mSexCall = sharedPref.getString(Const.AgePATH,"");
-        String mNameCall = sharedPref.getString(Const.NamePATH,"");
+        mAge = sharedPref.getString(Const.AgePATH, "値無し");
+        mSex = sharedPref.getString(Const.AgePATH,"");
+        mUser = sharedPref.getString(Const.NamePATH,"");
 
-        Log.d("TEST","mAgeCallの値："+mAgeCall);
+        Log.d("TEST","mAgeCallの値："+mAge);
 
         Realm mRealm = Realm.getDefaultInstance();
         RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
-                .equalTo("age",mAgeCall);
+                .equalTo("age",mAge);
         Nutritiondata resultProtein = query.findFirst();
         int mAgecall = resultProtein.getId();
 
         Log.d("TEST","mAgeCall2の値："+mAgecall);
 
-    }*/
+    }
 
     public void sharedpreferenceGet() {
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
