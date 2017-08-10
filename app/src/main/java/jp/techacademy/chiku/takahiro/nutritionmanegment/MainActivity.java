@@ -52,6 +52,7 @@ import android.content.res.AssetManager;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmModel;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setTitle("トップ");
 
         readNutritionData();
+        readInputNutritionData();
 
         ConstGet();
         Log.d("TEST","Protein値;"+mProteinAmount2);
@@ -165,15 +167,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 return true;
             }
         });
-
         //addTaskForTest();
-
         //reloadListView();
-
     }
+
 
     //予めモデルクラスを作成する事(NutritionData.class)
     private List<Nutritiondata> nutritionLists = new ArrayList<>();
+
     private void readNutritionData() {
         //Androidstudioはthisが必須,eclipceはいらないらしい
         InputStream is =  this.getResources().openRawResource(R.raw.recomendednutritiondata);
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             //readLineで一行ずつでブレイクする
             while ((line = reader.readLine()) != null){
                 //エラーが発生した際にどの行で止まったのか見るLog
-                Log.d("TESTRealm","Line:"+line);
+                Log.d("TESTRealm1","Line:"+line);
                 //tokensとsplitで分割する
                 String[] tokens =line.split(",");
                 Nutritiondata standerdlist = new Nutritiondata();
@@ -207,15 +208,60 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 realm.copyToRealmOrUpdate(standerdlist);
                 realm.commitTransaction();
                 count++;
-                Log.d("TESTTEST","Just created:"+standerdlist);
+                Log.d("TESTRealm1","Just created:"+standerdlist);
             }
             realm.close();
         } catch (IOException e) {
             //エラーが発生した際にどの行が原因か見るLog
-            Log.d("TESTTEST","Error reading data file on line" + line, e);
+            Log.d("TESTRealm1","Error reading data file on line" + line, e);
             e.printStackTrace();
         }
     }
+
+    private List<InputData> InputLists = new ArrayList<>();
+
+    private void readInputNutritionData() {
+        InputStream is =  this.getResources().openRawResource(R.raw.inputnutritiondata);
+        //リーダーを設定
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(is, Charset.forName("UTF-8"))
+        );
+        //リーダー用の変数を宣言、Log.dでエラーにならないよう""を設定
+        String line ="";
+        try{
+            int count = 1;
+            //Realmインスタンスを取得
+            Realm realm = Realm.getDefaultInstance();
+
+            //readLineで一行ずつでブレイクする
+            while ((line = reader.readLine()) != null){
+                //エラーが発生した際にどの行で止まったのか見るLog
+                Log.d("TESTRealm2","Line:"+line);
+                //tokensとsplitで分割する
+                String[] tokens =line.split(",");
+                InputData inputlist = new InputData();
+                inputlist.setCategory(tokens[0]);
+                inputlist.setMeals(tokens[1]);
+                inputlist.setNutrition(tokens[2]);
+                inputlist.setAmount(Integer.parseInt(tokens[3]));
+                inputlist.setId(count);
+                InputLists.add(inputlist);
+
+                //オブジェクトの追加や更新
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(inputlist);
+                realm.commitTransaction();
+                count++;
+                Log.d("TESTRealm2","Just created:"+inputlist);
+            }
+            realm.close();
+        } catch (IOException e) {
+            //エラーが発生した際にどの行が原因か見るLog
+            Log.d("TESTRealm2","Error reading data file on line" + line, e);
+            e.printStackTrace();
+        }
+    }
+
 
     public void setChart(HorizontalBarChart chart) {
         chart.setDrawBarShadow(false);
