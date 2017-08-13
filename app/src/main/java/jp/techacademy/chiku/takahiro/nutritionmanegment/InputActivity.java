@@ -109,8 +109,6 @@ public class InputActivity extends AppCompatActivity {
         Log.d("TEST", "摂取Meals:" + meals);
         Log.d("TEST", "摂取量(100g×):" + counts);
 
-        // mTimingも代入してあげる事
-
     }
 
     private void calendar() {

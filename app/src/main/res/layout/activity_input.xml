@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/consuming_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="食事した日"
-        android:id="@+id/consuming_button"/>
+        android:layout_alignParentStart="true"
+        android:text="----/--/--"
+        style="@style/Widget.AppCompat.Button.Borderless" />
 
     <Spinner
-        android:id="@+id/Cosumingtime_select"
+        android:id="@+id/timing_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -31,21 +34,13 @@
         android:entries="@array/list3"
         android:spinnerMode="dialog" />
 
-    <EditText
+    <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/Meals_EditText"
         android:hint="Input what you had(例:卵,鶏肉...)"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Amount_EditText"
-        android:hint="How much you had"/>
-
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="16dp"
@@ -54,13 +49,33 @@
         android:paddingTop="16dp"
         tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity">
 
-    <Button
-        android:layout_width="55dp"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="登録"
-        android:id="@+id/register_button"
-        android:layout_alignParentEnd="true" />
+        <EditText
+            android:id="@+id/Count_EditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="How much you had"
+            android:layout_alignBaseline="@+id/register_button"
+            android:layout_alignBottom="@+id/register_button"
+            android:inputType="number"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/today_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/register_button"
+            android:layout_toEndOf="@+id/Count_EditText"
+            android:textColor="#FF0000"
+            android:text="/100g"
+            android:textSize="24dp"/>
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:gravity="right"
+            android:text="登録" />
 
     </RelativeLayout>
 

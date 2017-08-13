@@ -109,8 +109,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Spinner mSpinnerAge= (Spinner) parent;
-                //mAge = (String) mSpinnerAge.getSelectedItem();
+                Spinner mSpinnerAge= (Spinner) parent;
+                mAge = (String) mSpinnerAge.getSelectedItem();
                 Log.d("TEST", "spinnerage0:" + mAge);
             }
 

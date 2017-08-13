@@ -10,7 +10,15 @@ public class Nutritiondata extends RealmObject implements Serializable {
     private String sex; // 性別
     private String nutrition; //栄養素
     private int amount; //推奨摂取量
+    private int dataid; //version更新をチェックするid
 
+    public int getDataid() {
+        return dataid;
+    }
+
+    public void setDataid(int dataid) {
+        this.dataid = dataid;
+    }
 
     @PrimaryKey
     private int id;

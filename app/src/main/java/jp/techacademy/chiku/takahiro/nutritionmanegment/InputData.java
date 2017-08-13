@@ -1,33 +1,25 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
+import java.io.Serializable;
 
-import java.sql.Date;
-
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class InputData {
-    private Date Date; //登録日
-    private String TimeZone; //摂取タイミング
+public class InputData extends RealmObject implements Serializable {
     private String Category; //Mealsのカテゴリ
     private String Meals; //摂取物
-    private int Amount; //摂取量
+    private String Nutrition;
+    private double Amount; //摂取量
+
     @PrimaryKey
     private int id;
 
-    public java.sql.Date getDate() {
-        return Date;
+    public String getNutrition() {
+        return Nutrition;
     }
 
-    public void setDate(java.sql.Date date) {
-        Date = date;
-    }
-
-    public String getTimeZone() {
-        return TimeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        TimeZone = timeZone;
+    public void setNutrition(String nutrition) {
+        Nutrition = nutrition;
     }
 
     public String getCategory() {
@@ -46,11 +38,11 @@ public class InputData {
         Meals = meals;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return Amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         Amount = amount;
     }
 
@@ -61,6 +53,15 @@ public class InputData {
     public void setId(int id) {
         this.id = id;
     }
+
+
+    @Override
+    public String toString() {
+        return "Nutritiondata{" +
+                "category='" + Category + '\'' +
+                ", meals='" + Meals + '\'' +
+                ", nutrition='" + Nutrition + '\'' +
+                ", amount=" + Amount +
+                '}';
+    }
 }
-
-

@@ -8,5 +8,6 @@ public class Const {
     public static final String CalorieAmountPATH = "calorieAmount";
     public static final String FiberAmountPATH = "fiberAmount";
     public static final String CalciumAmountPATH ="calciumAmount";
+    public static final String DataidPATH ="dataid";
 
 }

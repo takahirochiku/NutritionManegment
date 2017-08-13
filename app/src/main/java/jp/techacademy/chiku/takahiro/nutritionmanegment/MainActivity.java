@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -53,6 +54,7 @@ import android.content.res.AssetManager;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmModel;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -69,19 +71,12 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         }
     };*/
 
-    protected HorizontalBarChart mProteinChart;
-    protected HorizontalBarChart mCalorieChart;
-    protected HorizontalBarChart mFiberChart;
-    protected HorizontalBarChart mCalciumChart;
+    protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
     String mAmount;
+    String mData = "1";
     String NutritionName;
-    String mProteinAmount2;
-    String mCalorieAmount2;
-    String mFiberAmount2;
-    String mCalciumAmount2;
-
-    float groupSpace = 0.06f;
-    float barSpace = 0.06f;
+    String mProteinAmount2,mCalorieAmount2,mFiberAmount2,mCalciumAmount2;
+    int mDataid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setSupportActionBar(mToolbar);
         setTitle("トップ");
 
-        readNutritionData();
+        checkNutritionData();
         readInputNutritionData();
 
         ConstGet();
@@ -171,12 +166,36 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         //reloadListView();
     }
 
+    private void checkNutritionData() {
+
+        SharedPreferences sharedDataid = getSharedPreferences("dataInfo", Context.MODE_PRIVATE);
+        mData = sharedDataid.getString(Const.DataidPATH,"1");
+        Log.d("TESTmData","mData:"+mData);
+
+        Realm mRealm = Realm.getDefaultInstance();
+        mDataid = Integer.parseInt(mData);
+        Log.d("TESTmData","mDataid:"+mDataid);
+        RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class).greaterThan("dataid",mDataid);
+        RealmResults<Nutritiondata> resultdataid = query.findAll();
+        Log.d("TESTmData","resultdataidの数:"+resultdataid.size());
+        //finddirstにしてあげたい
+        if (resultdataid.size() > 0){
+            readNutritionData();
+            mDataid++;
+            SharedPreferences sharedDataid2 =getSharedPreferences("dataInfo", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedDataid2.edit();
+            editor.putString(Const.DataidPATH, String.valueOf(mDataid));
+            editor.commit();
+        }
+    }
+
 
     //予めモデルクラスを作成する事(NutritionData.class)
     private List<Nutritiondata> nutritionLists = new ArrayList<>();
 
     private void readNutritionData() {
         //Androidstudioはthisが必須,eclipceはいらないらしい
+        Realm realm = Realm.getDefaultInstance();
         InputStream is =  this.getResources().openRawResource(R.raw.recomendednutritiondata);
         //リーダーを設定
         BufferedReader reader = new BufferedReader(
@@ -187,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         try{
             int count = 1;
             //Realmインスタンスを取得
-            Realm realm = Realm.getDefaultInstance();
 
             //readLineで一行ずつでブレイクする
             while ((line = reader.readLine()) != null){
@@ -200,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 standerdlist.setSex(tokens[1]);
                 standerdlist.setNutrition(tokens[2]);
                 standerdlist.setAmount(Integer.parseInt(tokens[3]));
+                standerdlist.setDataid(Integer.parseInt(tokens[4]));
                 standerdlist.setId(count);
                 nutritionLists.add(standerdlist);
 
@@ -210,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 count++;
                 Log.d("TESTRealm1","Just created:"+standerdlist);
             }
-            realm.close();
+            //realm.close();
         } catch (IOException e) {
             //エラーが発生した際にどの行が原因か見るLog
             Log.d("TESTRealm1","Error reading data file on line" + line, e);
@@ -218,9 +237,10 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         }
     }
 
-    private List<InputData> InputLists = new ArrayList<>();
+   private List<InputData> InputLists = new ArrayList<>();
 
     private void readInputNutritionData() {
+        Realm realm = Realm.getDefaultInstance();
         InputStream is =  this.getResources().openRawResource(R.raw.inputnutritiondata);
         //リーダーを設定
         BufferedReader reader = new BufferedReader(
@@ -231,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         try{
             int count = 1;
             //Realmインスタンスを取得
-            Realm realm = Realm.getDefaultInstance();
+            //Realm realm = Realm.getDefaultInstance();
 
             //readLineで一行ずつでブレイクする
             while ((line = reader.readLine()) != null){
@@ -243,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 inputlist.setCategory(tokens[0]);
                 inputlist.setMeals(tokens[1]);
                 inputlist.setNutrition(tokens[2]);
-                inputlist.setAmount(Integer.parseInt(tokens[3]));
+                inputlist.setAmount(Double.parseDouble(tokens[3]));
                 inputlist.setId(count);
                 InputLists.add(inputlist);
 
