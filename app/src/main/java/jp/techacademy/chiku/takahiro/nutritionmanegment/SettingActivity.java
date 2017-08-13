@@ -127,14 +127,13 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
              mRadioGroup.check(R.id.radiobutton_female);
          }
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                //checkbox形式はisCheckedでtrueが変える場合、変数に値を代入させる
-                if (checkedId != -1) {
-                    //mSex = new String("男性");
-                    RadioButton mRadioButton = (RadioButton) findViewById(checkedId);
-                    mSex = mRadioButton.getText().toString();
-                }
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        if (checkedId != -1) {
+                            //mSex = new String("男性");
+                            RadioButton mRadioButton = (RadioButton) findViewById(checkedId);
+                            mSex = mRadioButton.getText().toString();
+                        }
             }
         });
 
