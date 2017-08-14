@@ -88,15 +88,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setTitle("トップ");
 
         checkNutritionData();
-        readInputNutritionData();
+        //readInputNutritionData();
 
         ConstGet();
         Log.d("TEST","Protein値;"+mProteinAmount2);
         Log.d("TEST","Calorie値;"+mCalorieAmount2);
         Log.d("TEST","Fiber値;"+mFiberAmount2);
         Log.d("TEST","Calcium値;"+mCalciumAmount2);
-
-
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
         mProteinChart.setOnChartValueSelectedListener(this);

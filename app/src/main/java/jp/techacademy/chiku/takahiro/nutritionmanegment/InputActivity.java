@@ -14,10 +14,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import java.sql.Date;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -118,18 +118,25 @@ public class InputActivity extends AppCompatActivity {
         }
 
         mTiming = (String) mTimingSpinner.getSelectedItem();
-        mDate = mDateString;
         String meals = mMealsReserach.getText().toString();
         String counts = mCountEdit.getText().toString();
-        Log.d("TEST", "摂取日にち:" + mDate);
-        Log.d("TEST", "摂取タイミング:" + mTiming);
-        Log.d("TEST", "摂取Meals:" + meals);
-        Log.d("TEST", "摂取量(100g×):" + counts);
+        GregorianCalendar calendar = new java.util.GregorianCalendar(mYear,mMonth,mDay);
+        mDate = calendar.getTime();
 
         mRegisterData.setTiming(mTiming);
         mRegisterData.setMeals(meals);
         mRegisterData.setDate(mDate);
+        mRegisterData.setCount(counts);
 
+        realm.copyToRealmOrUpdate(mRegisterData);
+        realm.commitTransaction();
+
+        realm.close();
+
+        Log.d("TEST", "摂取日にち:" + mDate);
+        Log.d("TEST", "摂取タイミング:" + mTiming);
+        Log.d("TEST", "摂取Meals:" + meals);
+        Log.d("TEST", "摂取量(100g×):" + counts);
     }
 
     private void calendar() {
