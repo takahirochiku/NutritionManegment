@@ -20,6 +20,7 @@ import java.sql.Date;
 import java.util.Calendar;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static android.icu.util.Calendar.getInstance;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.styleable.View;
@@ -27,13 +28,15 @@ import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.styleable.View;
 public class InputActivity extends AppCompatActivity {
 
     Button mDateButton,mRegisterButton;
-    private String mTiming,mDateString,mDate;
+    private String mTiming,mDateString;
+            private Date mDate;
     private int mYear, mMonth, mDay;
     private int year, month, day;
     private ArrayAdapter<CharSequence> adapter;
     private AutoCompleteTextView mMealsReserach;
     private EditText mCountEdit;
     private Spinner mTimingSpinner;
+    private RegisterData mRegisterData;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -97,8 +100,22 @@ public class InputActivity extends AppCompatActivity {
     };
 
     private void addMeals() {
-        //ealm realm = Realm.getDefaultInstance();
-        //realm.beginTransaction();
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        if(mRegisterData ==null){
+            mRegisterData =new RegisterData();
+
+            RealmResults<RegisterData> RegisterDataResults = realm.where(RegisterData.class).findAll();
+
+            int identifier;
+            if (RegisterDataResults.max("id") != null){
+                identifier = RegisterDataResults.max("id").intValue()+1;
+            }else{
+                identifier = 0;
+            }
+            mRegisterData.setId(identifier);
+        }
 
         mTiming = (String) mTimingSpinner.getSelectedItem();
         mDate = mDateString;
@@ -108,6 +125,10 @@ public class InputActivity extends AppCompatActivity {
         Log.d("TEST", "摂取タイミング:" + mTiming);
         Log.d("TEST", "摂取Meals:" + meals);
         Log.d("TEST", "摂取量(100g×):" + counts);
+
+        mRegisterData.setTiming(mTiming);
+        mRegisterData.setMeals(meals);
+        mRegisterData.setDate(mDate);
 
     }
 
