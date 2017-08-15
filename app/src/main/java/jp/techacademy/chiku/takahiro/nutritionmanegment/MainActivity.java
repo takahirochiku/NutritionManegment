@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         Log.d("TESTmData","mData:"+mData);
 
         Realm mRealm = Realm.getDefaultInstance();
+        Log.d("TEST","mRealm:"+mRealm);
         mDataid = Integer.parseInt(mData);
         Log.d("TESTmData","mDataid:"+mDataid);
         RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class).greaterThan("dataid",mDataid);
