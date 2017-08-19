@@ -9,6 +9,7 @@ import android.gesture.OrientedBoundingBox;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -41,6 +43,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import static android.icu.util.Calendar.getInstance;
 import java.util.Date;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -70,13 +76,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     };*/
 
     protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
-    String mAmount,mData,mData2;
+    String mAmount,mData,mData2,mDate;
     private int mYear, mMonth, mDay;
     int mDataid,mDataid2;
     String NutritionName;
     String mProteinAmount2,mCalorieAmount2,mFiberAmount2,mCalciumAmount2;
-    private Date mDate;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -303,31 +307,57 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     private void InputDataGet() {
-        GregorianCalendar calendar = new java.util.GregorianCalendar(mYear, mMonth, mDay);
-        mDate = calendar.getTime();
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DATE);
+        mDate = year + "/" + String.format("%02d",(month + 1)) + "/" + String.format("%02d", day);
+        Log.d("TEST","mDate:"+mDate);
 
         Realm mRealm = Realm.getDefaultInstance();
         RealmResults<RegisterData> query = mRealm.where(RegisterData.class)
                 .equalTo("Date", mDate).findAll();
 
-        HashMap<String, Integer> sumData = new HashMap<String, Integer>();
+        //HashMap<String, Integer> sumData = new HashMap<String, Integer>();
+
         int CalorieSum = 0;
+        int ProteinSum = 0;
+        int FiberSum = 0;
+        int CalciumSum = 0;
 
         for (RegisterData data : query) {
 
             String mMeals = data.getMeals();
+            Log.d("TEST","mMeals:"+mMeals);
 
-            RealmResults<Nutritiondata> query2 = mRealm.where(Nutritiondata.class)
-                    .equalTo("meals", mMeals).findAll();
-            for (Nutritiondata nData : query2) {
+            RealmResults<InputData> query2 = mRealm.where(InputData.class)
+                  .equalTo("Meals", mMeals).findAll();
+            Log.d("TEST","query2のサイズ:"+query2.size());
+
+            for (InputData nData : query2) {
                 String mNutrition = nData.getNutrition();
-                int mAmount = nData.getAmount();
+                Log.d("TEST","mNutrition:"+mNutrition);
+                double mAmount = nData.getAmount();
+                Log.d("TEST","mNutrition:"+mAmount);
 
                 if (mNutrition.equals("Calorie_cal")) {
                     CalorieSum += mAmount;
                 }
+                if (mNutrition.equals("Protein_g")) {
+                    ProteinSum += mAmount;
+                }
+                if (mNutrition.equals("Fiber_g")) {
+                    FiberSum += mAmount;
+                }
+                if (mNutrition.equals("Calcium_mg")) {
+                    CalciumSum += mAmount;
+                }
             }
         }
+        Log.d("TESTInputData","CalorieSum:"+CalorieSum);
+        Log.d("TESTInputData","ProteinSum:"+ProteinSum);
+        Log.d("TESTInputData","FiberSum:"+FiberSum);
+        Log.d("TESTInputData","CalciumSum:"+CalciumSum);
     }
 
 
