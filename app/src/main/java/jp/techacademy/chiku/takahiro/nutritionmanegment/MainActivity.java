@@ -41,22 +41,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.nio.charset.Charset;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
-
-import android.content.res.AssetManager;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmModel;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.Sort;
+
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity.day;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity.month;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity.year;
 
 
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
@@ -72,11 +70,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     };*/
 
     protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
-    String mAmount;
-    String mData = "1";
+    String mAmount,mData,mData2;
+    private int mYear, mMonth, mDay;
+    int mDataid,mDataid2;
     String NutritionName;
     String mProteinAmount2,mCalorieAmount2,mFiberAmount2,mCalciumAmount2;
-    int mDataid;
+    private Date mDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,14 +87,27 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setSupportActionBar(mToolbar);
         setTitle("トップ!");
 
-        checkNutritionData();
-        //readInputNutritionData();
+        checkRecDataid();
+
+        if (mDataid ==0){
+            readNutritionData();
+            updateRecDataid();
+        }
+
+        checkRecDataid2();
+
+        if (mDataid2 ==0) {
+            readInputNutritionData();
+            updateRecDataid2();
+        }
 
         ConstGet();
         Log.d("TEST","Protein値;"+mProteinAmount2);
         Log.d("TEST","Calorie値;"+mCalorieAmount2);
         Log.d("TEST","Fiber値;"+mFiberAmount2);
         Log.d("TEST","Calcium値;"+mCalciumAmount2);
+
+        InputDataGet();
 
         mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart2);
         mProteinChart.setOnChartValueSelectedListener(this);
@@ -164,36 +177,20 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         //reloadListView();
     }
 
-    private void checkNutritionData() {
+    private void checkRecDataid() {
 
         SharedPreferences sharedDataid = getSharedPreferences("dataInfo", Context.MODE_PRIVATE);
-        mData = sharedDataid.getString(Const.DataidPATH,"1");
-        Log.d("TESTmData","mData:"+mData);
-
-        Realm mRealm = Realm.getDefaultInstance();
-        Log.d("TEST","mRealm:"+mRealm);
+        mData = sharedDataid.getString(Const.DataidPATH, "0");
         mDataid = Integer.parseInt(mData);
-        Log.d("TESTmData","mDataid:"+mDataid);
-        RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class).greaterThan("dataid",mDataid);
-        RealmResults<Nutritiondata> resultdataid = query.findAll();
-        Log.d("TESTmData","resultdataidの数:"+resultdataid.size());
-        //finddirstにしてあげたい
-        if (resultdataid.size() > 0){
-            readNutritionData();
-            mDataid++;
-            SharedPreferences sharedDataid2 =getSharedPreferences("dataInfo", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedDataid2.edit();
-            editor.putString(Const.DataidPATH, String.valueOf(mDataid));
-            editor.commit();
-        }
+        Log.d("TESTmData", "mDataid:" + mDataid);
     }
-
 
     //予めモデルクラスを作成する事(NutritionData.class)
     private List<Nutritiondata> nutritionLists = new ArrayList<>();
 
     private void readNutritionData() {
         //Androidstudioはthisが必須,eclipceはいらないらしい
+
         Realm realm = Realm.getDefaultInstance();
         InputStream is =  this.getResources().openRawResource(R.raw.recomendednutritiondata);
         //リーダーを設定
@@ -236,7 +233,23 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         }
     }
 
-   private List<InputData> InputLists = new ArrayList<>();
+    private void updateRecDataid(){
+        mDataid++;
+        SharedPreferences sharedDataid2 =getSharedPreferences("dataInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedDataid2.edit();
+        editor.putString(Const.DataidPATH, String.valueOf(mDataid));
+        editor.commit();
+    }
+
+    private void checkRecDataid2() {
+        SharedPreferences sharedDataid = getSharedPreferences("dataInfo", Context.MODE_PRIVATE);
+        mData2 = sharedDataid.getString(Const.Dataid2PATH, "0");
+        mDataid2 = Integer.parseInt(mData2);
+        Log.d("TESTmData", "mDataid2:" + mDataid2);
+    }
+
+
+    private List<InputData> InputLists = new ArrayList<>();
 
     private void readInputNutritionData() {
         Realm realm = Realm.getDefaultInstance();
@@ -278,6 +291,42 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             //エラーが発生した際にどの行が原因か見るLog
             Log.d("TESTRealm2","Error reading data file on line" + line, e);
             e.printStackTrace();
+        }
+    }
+
+    private void updateRecDataid2() {
+        mDataid2++;
+        SharedPreferences sharedDataid2 =getSharedPreferences("dataInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedDataid2.edit();
+        editor.putString(Const.Dataid2PATH, String.valueOf(mDataid2));
+        editor.commit();
+    }
+
+    private void InputDataGet() {
+        GregorianCalendar calendar = new java.util.GregorianCalendar(mYear, mMonth, mDay);
+        mDate = calendar.getTime();
+
+        Realm mRealm = Realm.getDefaultInstance();
+        RealmResults<RegisterData> query = mRealm.where(RegisterData.class)
+                .equalTo("Date", mDate).findAll();
+
+        HashMap<String, Integer> sumData = new HashMap<String, Integer>();
+        int CalorieSum = 0;
+
+        for (RegisterData data : query) {
+
+            String mMeals = data.getMeals();
+
+            RealmResults<Nutritiondata> query2 = mRealm.where(Nutritiondata.class)
+                    .equalTo("meals", mMeals).findAll();
+            for (Nutritiondata nData : query2) {
+                String mNutrition = nData.getNutrition();
+                int mAmount = nData.getAmount();
+
+                if (mNutrition.equals("Calorie_cal")) {
+                    CalorieSum += mAmount;
+                }
+            }
         }
     }
 
@@ -486,9 +535,5 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mCalorieAmount2 = sharedPref.getString(Const.CalorieAmountPATH,"0");
         mFiberAmount2 = sharedPref.getString(Const.FiberAmountPATH,"0");
         mCalciumAmount2 = sharedPref.getString(Const.CalciumAmountPATH,"0");
-
-
-
-
     }
 }
