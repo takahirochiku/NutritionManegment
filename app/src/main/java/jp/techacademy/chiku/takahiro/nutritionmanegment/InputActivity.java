@@ -1,6 +1,7 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -16,22 +17,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static android.icu.util.Calendar.getInstance;
-import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.styleable.View;
 
 public class InputActivity extends AppCompatActivity {
 
     Button mDateButton,mRegisterButton;
-    private String mTiming,mDateString;
-            private Date mDate;
+    private String mTiming,mDateString,mMeals;
     private int mYear, mMonth, mDay;
-    private int year, month, day;
+    public static int year,month,day;
     private ArrayAdapter<CharSequence> adapter;
     private AutoCompleteTextView mMealsReserach;
     private EditText mCountEdit;
@@ -95,7 +91,7 @@ public class InputActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             addMeals();
-            finish();
+            reload();
         }
     };
 
@@ -118,14 +114,12 @@ public class InputActivity extends AppCompatActivity {
         }
 
         mTiming = (String) mTimingSpinner.getSelectedItem();
-        String meals = mMealsReserach.getText().toString();
+        mMeals = mMealsReserach.getText().toString();
         String counts = mCountEdit.getText().toString();
-        GregorianCalendar calendar = new java.util.GregorianCalendar(mYear,mMonth,mDay);
-        mDate = calendar.getTime();
 
         mRegisterData.setTiming(mTiming);
-        mRegisterData.setMeals(meals);
-        mRegisterData.setDate(mDate);
+        mRegisterData.setMeals(mMeals);
+        mRegisterData.setDate(mDateString);
         mRegisterData.setCount(counts);
 
         realm.copyToRealmOrUpdate(mRegisterData);
@@ -133,18 +127,24 @@ public class InputActivity extends AppCompatActivity {
 
         realm.close();
 
-        Log.d("TEST", "摂取日にち:" + mDate);
+        Log.d("TEST", "摂取日にち:" + mDateString);
         Log.d("TEST", "摂取タイミング:" + mTiming);
-        Log.d("TEST", "摂取Meals:" + meals);
+        Log.d("TEST", "摂取Meals:" + mMeals);
         Log.d("TEST", "摂取量(100g×):" + counts);
     }
 
-    private void calendar() {
-            Calendar calendar = Calendar.getInstance();
-            year = calendar.get(Calendar.YEAR);
-            month = calendar.get(Calendar.MONTH);// 0 - 11
-            //month++;
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            //day++;
+    public static void calendar() {
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);// 0 - 11
+        //month++;
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        //day++;
     }
+
+    public void reload() {
+        Intent intent = new Intent(getApplicationContext(), InputActivity.class);
+        startActivity(intent);
+    }
+
 }
