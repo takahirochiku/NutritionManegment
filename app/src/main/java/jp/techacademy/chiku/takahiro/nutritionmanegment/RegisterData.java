@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class RegisterData extends RealmObject implements Serializable {
 
-    private Date Date;
+    private String Date;
     private String Timing;
     private String Meals;
     private String Count;
@@ -15,13 +15,14 @@ public class RegisterData extends RealmObject implements Serializable {
     @PrimaryKey
     private int id;
 
-    public Date getDate() {
+    public String getDate() {
         return Date;
     }
 
-    public void setDate(Date date) {
-        this.Date = date;
+    public void setDate(String date) {
+        Date = date;
     }
+
     public String getTiming() {
         return Timing;
     }

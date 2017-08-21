@@ -17,19 +17,50 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="～月～日(TODAYにしたい)"
+        android:textSize="26sp"
+        android:text=""
         android:id="@+id/today_text1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/LessProtein" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/MuchProtein" />
+
+    <!--TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/todayCalorie" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/todayFiber" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/todayCalcium" /-->
 
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="～～～をもっと摂取しましょう(栄養素代入したい)"
+    android:text="テキストAをもっと摂取しましょう(栄養素代入したい)"
     android:id="@+id/today_text2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="～～～の摂取を控えましょう(栄養素代入したい)"
+        android:text="テキストBの摂取を控えましょう(栄養素代入したい)"
         android:id="@+id/today_text3"/>
 
     <EditText

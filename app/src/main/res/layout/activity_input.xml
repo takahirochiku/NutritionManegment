@@ -24,7 +24,7 @@
         android:entries="@array/list2"
         android:spinnerMode="dialog" />
 
-    <Spinner
+    <!--Spinner
         android:id="@+id/MealsCategory_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:entries="@array/list3"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog" /-->
 
     <AutoCompleteTextView
         android:layout_width="match_parent"

@@ -24,7 +24,7 @@ import io.realm.RealmResults;
 
 public class InputActivity extends AppCompatActivity {
 
-    Button mDateButton,mRegisterButton;
+    Button mDateButton;
     private String mTiming,mDateString,mMeals;
     private int mYear, mMonth, mDay;
     public static int year,month,day;
@@ -42,16 +42,16 @@ public class InputActivity extends AppCompatActivity {
         setTitle("新規登録");
         calendar();
 
-        adapter = ArrayAdapter.createFromResource(this, R.array.list4, android.R.layout.simple_dropdown_item_1line);
-        mMealsReserach = (AutoCompleteTextView)findViewById(R.id.Meals_EditText);
-        mMealsReserach.setAdapter(adapter);
-
         mDateButton = (Button) findViewById(R.id.consuming_button);
         mDateButton.setOnClickListener(mOnDateClickListener);
 
         mTimingSpinner =(Spinner)findViewById(R.id.timing_spinner);
-        mCountEdit =(EditText)findViewById(R.id.Count_EditText);
 
+        adapter = ArrayAdapter.createFromResource(this, R.array.list4, android.R.layout.simple_dropdown_item_1line);
+        mMealsReserach = (AutoCompleteTextView)findViewById(R.id.Meals_EditText);
+        mMealsReserach.setAdapter(adapter);
+
+        mCountEdit =(EditText)findViewById(R.id.Count_EditText);
         findViewById(R.id.register_button).setOnClickListener(mOnDoneClickListener);
 
         mTimingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -149,8 +149,10 @@ public class InputActivity extends AppCompatActivity {
     }
 
     public void reload() {
-        Intent intent = new Intent(getApplicationContext(), InputActivity.class);
-        startActivity(intent);
+        int i =0;
+        mTimingSpinner.setSelection(i);
+        mMealsReserach.setText(null);
+        mCountEdit.setText(null);
     }
 
 }

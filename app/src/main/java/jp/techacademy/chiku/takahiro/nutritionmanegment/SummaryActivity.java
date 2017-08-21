@@ -14,10 +14,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CalendarView;
+import android.widget.TextView;
+
+import com.github.mikephil.charting.formatter.IFillFormatter;
+
+import java.util.ArrayList;
+
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinAmount2;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinSum;
 
 public class SummaryActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
+    String Protein;
+    String mRecommendedtAmount;
+    int mActualAmount;
+    TextView ProteinLess,ProteinMuch;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +40,9 @@ public class SummaryActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         setTitle("サマリー");
+
+        TextView ProteinLess =(TextView)findViewById(R.id.LessProtein);
+        TextView ProteinMuch =(TextView)findViewById(R.id.MuchProtein);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +54,13 @@ public class SummaryActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        summaryview(Protein,mProteinSum,mProteinAmount2,ProteinLess,ProteinMuch);
+
+        TextView dateText = (TextView)findViewById(R.id.today_text1) ;
+        InputActivity.calendar();
+        String today = InputActivity.year+"年"+InputActivity.month+"月"+InputActivity.day+"月";
+        dateText.setText(today);
 
         // ナビゲーションドロワーの設定
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -67,6 +91,20 @@ public class SummaryActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void summaryview(String NutritionName, int actualSum, String recommendedAmount, TextView textLess, TextView textMuch){
+
+        int recommendedAmount2 =Integer.parseInt(recommendedAmount);
+        int volume =actualSum/recommendedAmount2;
+
+        if (volume <0.75){
+            textLess.setText(NutritionName);
+            textMuch.setVisibility(View.INVISIBLE);
+        }else if(volume > 1.50){
+            textMuch.setText(NutritionName);
+            textLess.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

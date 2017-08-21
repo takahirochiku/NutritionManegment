@@ -77,10 +77,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
     String mAmount,mData,mData2,mDate;
-    private int mYear, mMonth, mDay;
+    public int mCalorieSum;
+    public static int mProteinSum;
+    public int mFiberSum;
+    public int mCalciumSum;
     int mDataid,mDataid2;
+    int mInputAmount;
     String NutritionName;
-    String mProteinAmount2,mCalorieAmount2,mFiberAmount2,mCalciumAmount2;
+    public static String mProteinAmount2,mCalorieAmount2,mFiberAmount2,mCalciumAmount2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,9 +181,15 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 return true;
             }
         });
-        //addTaskForTest();
-        //reloadListView();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        InputDataGet();
+        Log.d("TEST","onResume");
+    }
+
 
     private void checkRecDataid() {
 
@@ -318,16 +328,17 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         RealmResults<RegisterData> query = mRealm.where(RegisterData.class)
                 .equalTo("Date", mDate).findAll();
 
-        //HashMap<String, Integer> sumData = new HashMap<String, Integer>();
+        HashMap<String, Integer> sumData = new HashMap<String, Integer>();
 
-        int CalorieSum = 0;
-        int ProteinSum = 0;
-        int FiberSum = 0;
-        int CalciumSum = 0;
+        mCalorieSum = 0;
+        mProteinSum = 0;
+        mFiberSum = 0;
+        mCalciumSum = 0;
 
         for (RegisterData data : query) {
 
             String mMeals = data.getMeals();
+
             Log.d("TEST","mMeals:"+mMeals);
 
             RealmResults<InputData> query2 = mRealm.where(InputData.class)
@@ -340,24 +351,30 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 double mAmount = nData.getAmount();
                 Log.d("TEST","mNutrition:"+mAmount);
 
-                if (mNutrition.equals("Calorie_cal")) {
-                    CalorieSum += mAmount;
-                }
+                /**if(sumData.containsKey(mNutrition)){
+                    if (mNutrition.equals("Calorie_cal")) {
+                        mCalorieSum += mAmount;
+                    }
+                intger sum = sumData.get(mNutrition);
+                    sumData.put(mNutrition, new Integer(mAmount));
+
+                }else{}*/
+
                 if (mNutrition.equals("Protein_g")) {
-                    ProteinSum += mAmount;
+                    mProteinSum += mAmount;
                 }
                 if (mNutrition.equals("Fiber_g")) {
-                    FiberSum += mAmount;
+                    mFiberSum += mAmount;
                 }
                 if (mNutrition.equals("Calcium_mg")) {
-                    CalciumSum += mAmount;
+                    mCalciumSum += mAmount;
                 }
             }
         }
-        Log.d("TESTInputData","CalorieSum:"+CalorieSum);
-        Log.d("TESTInputData","ProteinSum:"+ProteinSum);
-        Log.d("TESTInputData","FiberSum:"+FiberSum);
-        Log.d("TESTInputData","CalciumSum:"+CalciumSum);
+        Log.d("TESTInputData","CalorieSum:"+mCalorieSum);
+        Log.d("TESTInputData","ProteinSum:"+mProteinSum);
+        Log.d("TESTInputData","FiberSum:"+mFiberSum);
+        Log.d("TESTInputData","CalciumSum:"+mCalciumSum);
     }
 
 
@@ -460,21 +477,25 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         if (chart == mProteinChart){
             NutritionName = "Protein";
             mAmount = mProteinAmount2;
+            mInputAmount = mProteinSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[0]);
         }else if(chart == mCalorieChart){
             NutritionName = "Calorie";
             mAmount = mCalorieAmount2;
+            mInputAmount = mCalorieSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[1]);
         }else if(chart == mFiberChart){
             NutritionName = "Fiber";
             mAmount = mFiberAmount2;
+            mInputAmount = mFiberSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[2]);
         }else if(chart == mCalciumChart){
             NutritionName = "Calcium";
             mAmount = mCalciumAmount2;
+            mInputAmount = mCalciumSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[3]);
         }
@@ -483,7 +504,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         ArrayList<BarEntry> chart2 = new ArrayList<>();
         int mAmount2=Integer.parseInt(mAmount);
 
-        chart2.add(new BarEntry(1f,10));
+        chart2.add(new BarEntry(1f,mInputAmount));
         chart2.add(new BarEntry(2f, mAmount2));
 
         //BarDataSet DataSet1;

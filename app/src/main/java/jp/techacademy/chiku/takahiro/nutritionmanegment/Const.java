@@ -9,5 +9,6 @@ public class Const {
     public static final String FiberAmountPATH = "fiberAmount";
     public static final String CalciumAmountPATH ="calciumAmount";
     public static final String DataidPATH ="dataid";
+    public static final String Dataid2PATH ="dataid2";
 
 }
