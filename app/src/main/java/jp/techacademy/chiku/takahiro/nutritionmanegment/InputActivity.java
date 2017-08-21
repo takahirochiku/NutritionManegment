@@ -77,15 +77,21 @@ public class InputActivity extends AppCompatActivity {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             mYear = year;
-                            mMonth = monthOfYear;
+                            mMonth = monthOfYear+1;
                             mDay = dayOfMonth;
-                            mDateString = mYear + "/" + String.format("%02d",(mMonth + 1)) + "/" + String.format("%02d", mDay);
+                            mDateString = mYear + "/" + String.format("%02d",(mMonth)) + "/" + String.format("%02d", mDay);
                             mDateButton.setText(mDateString);
                         }
-                    }, year, month, day);
+                    }, year, month-1, day);
+            initialDateSet();
             datePickerDialog.show();
         }
     };
+
+    private void initialDateSet(){
+        mDateString = year + "/" + String.format("%02d",(month)) + "/" + String.format("%02d", day);
+        mDateButton.setText(mDateString);
+    }
 
     private View.OnClickListener mOnDoneClickListener = new View.OnClickListener() {
         @Override
@@ -137,7 +143,7 @@ public class InputActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);// 0 - 11
-        //month++;
+        month++;
         day = calendar.get(Calendar.DAY_OF_MONTH);
         //day++;
     }
