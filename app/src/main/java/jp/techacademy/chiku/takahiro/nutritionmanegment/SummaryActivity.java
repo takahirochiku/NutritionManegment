@@ -23,13 +23,14 @@ import java.util.ArrayList;
 
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinAmount2;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinSum;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.LessProtein;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.MuchProtein;
 
 public class SummaryActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     String Protein;
-    String mRecommendedtAmount;
-    int mActualAmount;
+    double mVolume;
     TextView ProteinLess,ProteinMuch;
 
 
@@ -40,9 +41,6 @@ public class SummaryActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         setTitle("サマリー");
-
-        TextView ProteinLess =(TextView)findViewById(R.id.LessProtein);
-        TextView ProteinMuch =(TextView)findViewById(R.id.MuchProtein);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +53,8 @@ public class SummaryActivity extends AppCompatActivity {
             }
         });
 
-        summaryview(Protein,mProteinSum,mProteinAmount2,ProteinLess,ProteinMuch);
+        summaryviewLess(Protein,mProteinSum,mProteinAmount2,ProteinLess,LessProtein);
+        summaryviewMuch(Protein,mProteinSum,mProteinAmount2,ProteinMuch,MuchProtein);
 
         TextView dateText = (TextView)findViewById(R.id.today_text1) ;
         InputActivity.calendar();
@@ -93,7 +92,7 @@ public class SummaryActivity extends AppCompatActivity {
         });
     }
 
-    private void summaryview(String NutritionName, int actualSum, String recommendedAmount, TextView textLess, TextView textMuch){
+    /**private void summaryview(String NutritionName, int actualSum, String recommendedAmount, TextView textLess, TextView textMuch){
 
         int recommendedAmount2 =Integer.parseInt(recommendedAmount);
         int volume =actualSum/recommendedAmount2;
@@ -105,7 +104,39 @@ public class SummaryActivity extends AppCompatActivity {
             textMuch.setText(NutritionName);
             textLess.setVisibility(View.INVISIBLE);
         }
+    }*/
+
+    private void summaryviewLess(String NutritionName, int actualSum, String recommendedAmount, TextView textLess,int textViewLessid) {
+
+        int recommendedAmount2 =Integer.parseInt(recommendedAmount);
+        mVolume =(double)actualSum/recommendedAmount2;
+
+        textLess =(TextView)findViewById(textViewLessid);
+        if (mVolume <=0.75){
+            textLess.setText(NutritionName);
+        }else if(mVolume >= 1.50){
+            textLess.setVisibility(View.INVISIBLE);
+        }
+        Log.d("TEST","actualSum:"+actualSum);
+        Log.d("TEST","recommendedAmount2:"+recommendedAmount2);
+        Log.d("TEST","mVolume:"+mVolume);
     }
+
+    private void summaryviewMuch(String NutritionName, int actualSum, String recommendedAmount, TextView textMuch,int textViewMuchid) {
+
+        int recommendedAmount2 =Integer.parseInt(recommendedAmount);
+        mVolume =(double)actualSum/recommendedAmount2;
+
+        textMuch =(TextView)findViewById(textViewMuchid);
+        if (mVolume <0.75){
+            textMuch.setVisibility(View.INVISIBLE);
+        }else if(mVolume > 1.50){
+            textMuch.setText(NutritionName);
+        }
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
