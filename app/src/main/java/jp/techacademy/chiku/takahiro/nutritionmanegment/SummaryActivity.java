@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
@@ -32,6 +34,8 @@ public class SummaryActivity extends AppCompatActivity {
     String Protein;
     double mVolume;
     TextView ProteinLess,ProteinMuch;
+    private ArrayAdapter<CharSequence> adapter;
+    private AutoCompleteTextView mMealsResearch;
 
 
     @Override
@@ -53,8 +57,8 @@ public class SummaryActivity extends AppCompatActivity {
             }
         });
 
-        summaryviewLess(Protein,mProteinSum,mProteinAmount2,ProteinLess,LessProtein);
-        summaryviewMuch(Protein,mProteinSum,mProteinAmount2,ProteinMuch,MuchProtein);
+        summaryviewLess("Protein",mProteinSum,mProteinAmount2,ProteinLess,LessProtein);
+        summaryviewMuch("Protein",mProteinSum,mProteinAmount2,ProteinMuch,MuchProtein);
 
         TextView dateText = (TextView)findViewById(R.id.today_text1) ;
         InputActivity.calendar();
@@ -66,6 +70,10 @@ public class SummaryActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        adapter = ArrayAdapter.createFromResource(this, R.array.list4, android.R.layout.simple_dropdown_item_1line);
+        mMealsResearch = (AutoCompleteTextView)findViewById(R.id.wishingmeals_edittext);
+        mMealsResearch.setAdapter(adapter);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

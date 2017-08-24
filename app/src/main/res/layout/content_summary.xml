@@ -12,7 +12,8 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SummaryActivity"
-    tools:showIn="@layout/app_bar_summary">
+    tools:showIn="@layout/app_bar_summary"
+    android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,82 +22,76 @@
         android:text=""
         android:id="@+id/today_text1" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/LessProtein" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/MuchProtein" />
-
-    <!--TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/todayCalorie" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/todayFiber" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/todayCalcium" /-->
-
-    <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="テキストAをもっと摂取しましょう(栄養素代入したい)"
-    android:id="@+id/today_text2" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="テキストBの摂取を控えましょう(栄養素代入したい)"
-        android:id="@+id/today_text3"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/wishingmeals_edittext"
-        android:hint="Input what you feel like to(例:卵,鶏肉...)"
-        android:layout_below="@+id/today_text3"/>
-
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SummaryActivity">
+        android:layout_height="337dp"
+        tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity">
+
+        <TextView
+            android:id="@+id/LessProtein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/today_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/LessProtein"
+            android:text="をもっと摂取しましょう" />
+
+        <TextView
+            android:id="@+id/MuchProtein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LessProtein"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/today_text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/wishingmeals_edittext"
+            android:layout_toEndOf="@+id/MuchProtein"
+            android:text="の摂取を控えましょう"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/wishingmeals_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LessProtein"
+            android:hint="Input what you feel like to(例:卵,鶏肉...)" />
 
         <Button
+            android:id="@+id/register_button"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/wishingmeals_edittext"
+            android:layout_marginTop="37dp"
             android:gravity="right"
-            android:text="検索"
-            android:id="@+id/register_button"
-            android:layout_alignParentEnd="true" />
+            android:text="検索" />
+
+        <TextView
+            android:id="@+id/result1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/register_button"
+            android:text="仮：検索結果の栄養素を出したい" />
+
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="仮：検索結果の栄養素を出したい"
-        android:id="@+id/result1" />
-
-    <Button
+    <ListView
+        android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="オススメレシピ"
-        android:id="@+id/recommedingrecipe_button" />
+        android:layout_below="@+id/searchEditText"/>
+
+    <Button
+        android:id="@+id/recommedingrecipe_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="オススメレシピ" />
 
 </LinearLayout>
