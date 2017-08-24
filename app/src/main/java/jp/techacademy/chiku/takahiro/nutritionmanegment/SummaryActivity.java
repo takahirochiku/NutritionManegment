@@ -16,12 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.formatter.IFillFormatter;
 
 import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinAmount2;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinSum;
@@ -34,8 +40,11 @@ public class SummaryActivity extends AppCompatActivity {
     String Protein;
     double mVolume;
     TextView ProteinLess,ProteinMuch;
+    private ListView mListView;
     private ArrayAdapter<CharSequence> adapter;
+    private SummaryAdapter mSummaryAdapter;
     private AutoCompleteTextView mMealsResearch;
+    private Button mSearchButton;
 
 
     @Override
@@ -45,6 +54,29 @@ public class SummaryActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         setTitle("サマリー");
+
+        mSummaryAdapter = new SummaryAdapter(SummaryActivity.this);
+        mListView = (ListView) findViewById(R.id.listView1);
+
+        mSearchButton = (Button) findViewById(R.id.search_button);
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+                                             @Override
+                                             public void onClick(View v) {
+                                                 if (v.getId() == R.id.search_button) {
+                                                     if (mMealsResearch.length() != 0) {
+                                                         Realm mRealm = Realm.getDefaultInstance();
+                                                         RealmQuery<InputData> query = mRealm.where(InputData.class);
+                                                         query.equalTo("Meals", mMealsResearch.getText().toString());
+                                                         RealmResults<InputData> result1 = query.findAll();
+                                                         mSummaryAdapter.setSummaryList(mRealm.copyFromRealm(result1));
+                                                         mListView.setAdapter(mSummaryAdapter);
+                                                         mSummaryAdapter.notifyDataSetChanged();
+                                                     }
+                                                 }
+                                             }
+                                         });
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -169,3 +201,4 @@ public class SummaryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
