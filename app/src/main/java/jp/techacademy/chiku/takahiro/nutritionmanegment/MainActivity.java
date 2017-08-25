@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setSupportActionBar(mToolbar);
         setTitle("トップ!");
 
-        mDataid=0;
 
         checkRecDataid();
 

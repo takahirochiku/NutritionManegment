@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="26sp"
+        android:textSize="20sp"
         android:text=""
         android:id="@+id/today_text1" />
 
@@ -31,13 +31,18 @@
             android:id="@+id/LessProtein"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:text=""
+            android:textColor="#FF0000"
+            android:textSize="18sp"
+            android:layout_marginTop="0.5dp"
+            />
 
         <TextView
             android:id="@+id/today_text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/LessProtein"
+            android:textSize="15sp"
             android:text="をもっと摂取しましょう" />
 
         <TextView
@@ -45,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/LessProtein"
+            android:textSize="20sp"
             android:text="" />
 
         <TextView
@@ -53,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/today_text2"
             android:layout_toRightOf="@+id/MuchProtein"
+            android:textSize="15sp"
             android:text="の摂取を控えましょう" />
 
         <AutoCompleteTextView
@@ -60,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/LessProtein"
+            android:layout_marginTop="18dp"
             android:hint="Input what you feel like to(例:卵,鶏肉...)" />
 
         <Button
@@ -76,7 +84,7 @@
             android:id="@+id/listView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/register_button"/>
+            android:layout_below="@+id/search_button"/>
 
 
     </RelativeLayout>

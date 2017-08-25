@@ -359,14 +359,16 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         mAge = sharedPref.getString(Const.AgePATH, "値無し");
-        mSex = sharedPref.getString(Const.AgePATH,"");
+        mSex = sharedPref.getString(Const.SexPATH,"");
         mUser = sharedPref.getString(Const.NamePATH,"");
 
-        Log.d("TEST","mAgeCallの値："+mAge);
+        Log.d("TEST","mAgeの値："+mAge);
+        Log.d("TEST","mSexの値："+mSex);
 
         Realm mRealm = Realm.getDefaultInstance();
         RealmQuery<Nutritiondata> query = mRealm.where(Nutritiondata.class)
-                .equalTo("age",mAge);
+                .equalTo("age",mAge)
+                .equalTo("sex",mSex);
         Nutritiondata resultProtein = query.findFirst();
         int mAgecall = resultProtein.getId();
 

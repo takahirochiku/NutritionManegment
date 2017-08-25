@@ -1,5 +1,6 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -33,13 +35,15 @@ import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mPro
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinSum;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.LessProtein;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.MuchProtein;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.today_text2;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.today_text3;
 
 public class SummaryActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     String Protein;
     double mVolume;
-    TextView ProteinLess,ProteinMuch;
+    TextView ProteinLess,ProteinMuch,ProteinLessWords,ProteinMuchWords;
     private ListView mListView;
     private ArrayAdapter<CharSequence> adapter;
     private SummaryAdapter mSummaryAdapter;
@@ -63,6 +67,10 @@ public class SummaryActivity extends AppCompatActivity {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
                                              @Override
                                              public void onClick(View v) {
+
+                                                 InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                 im.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
                                                  if (v.getId() == R.id.search_button) {
                                                      if (mMealsResearch.length() != 0) {
                                                          Realm mRealm = Realm.getDefaultInstance();
@@ -72,6 +80,9 @@ public class SummaryActivity extends AppCompatActivity {
                                                          mSummaryAdapter.setSummaryList(mRealm.copyFromRealm(result1));
                                                          mListView.setAdapter(mSummaryAdapter);
                                                          mSummaryAdapter.notifyDataSetChanged();
+                                                     }else{
+                                                         View view = findViewById(android.R.id.content);
+                                                         Snackbar.make(view, "入力されていません", Snackbar.LENGTH_LONG).show();
                                                      }
                                                  }
                                              }
@@ -89,8 +100,8 @@ public class SummaryActivity extends AppCompatActivity {
             }
         });
 
-        summaryviewLess("Protein",mProteinSum,mProteinAmount2,ProteinLess,LessProtein);
-        summaryviewMuch("Protein",mProteinSum,mProteinAmount2,ProteinMuch,MuchProtein);
+        summaryviewLess("Protein",mProteinSum,mProteinAmount2,ProteinLess,ProteinLessWords,LessProtein,today_text2);
+        summaryviewMuch("Protein",mProteinSum,mProteinAmount2,ProteinMuch,ProteinMuchWords,MuchProtein,today_text3);
 
         TextView dateText = (TextView)findViewById(R.id.today_text1) ;
         InputActivity.calendar();
@@ -146,30 +157,34 @@ public class SummaryActivity extends AppCompatActivity {
         }
     }*/
 
-    private void summaryviewLess(String NutritionName, int actualSum, String recommendedAmount, TextView textLess,int textViewLessid) {
+    private void summaryviewLess(String NutritionName, int actualSum, String recommendedAmount, TextView textLess,TextView textLessWords,int textViewLessid,int textViewLessWordsid) {
 
         int recommendedAmount2 =Integer.parseInt(recommendedAmount);
         mVolume =(double)actualSum/recommendedAmount2;
 
         textLess =(TextView)findViewById(textViewLessid);
+        textLessWords =(TextView)findViewById(textViewLessWordsid);
         if (mVolume <=0.75){
             textLess.setText(NutritionName);
         }else if(mVolume >= 1.50){
             textLess.setVisibility(View.INVISIBLE);
+            textLessWords.setVisibility(View.INVISIBLE);
         }
         Log.d("TEST","actualSum:"+actualSum);
         Log.d("TEST","recommendedAmount2:"+recommendedAmount2);
         Log.d("TEST","mVolume:"+mVolume);
     }
 
-    private void summaryviewMuch(String NutritionName, int actualSum, String recommendedAmount, TextView textMuch,int textViewMuchid) {
+    private void summaryviewMuch(String NutritionName, int actualSum, String recommendedAmount, TextView textMuch,TextView textMuchWords,int textViewMuchid,int textViewMuchWordsid) {
 
         int recommendedAmount2 =Integer.parseInt(recommendedAmount);
         mVolume =(double)actualSum/recommendedAmount2;
 
         textMuch =(TextView)findViewById(textViewMuchid);
+        textMuchWords =(TextView)findViewById(textViewMuchWordsid);
         if (mVolume <0.75){
             textMuch.setVisibility(View.INVISIBLE);
+            textMuchWords.setVisibility(View.INVISIBLE);
         }else if(mVolume > 1.50){
             textMuch.setText(NutritionName);
         }
