@@ -73,10 +73,35 @@ public class SummaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_summary);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle("サマリー");
+        setTitle("Summary");
 
         mSummaryAdapter = new SummaryAdapter(SummaryActivity.this);
         mListView = (ListView) findViewById(R.id.listView1);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected (MenuItem item){
+                int id = item.getItemId();
+
+                if (id == R.id.nav_meals) {
+                    mToolbar.setTitle("Today");
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.nav_nuetrition) {
+                    mToolbar.setTitle("栄養");
+                    Log.d("TESTEST", "この機能は未だ作り途中です");
+                } else if (id == R.id.nav_saumary) {
+                    mToolbar.setTitle("Summary");
+                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+                    startActivity(intent);
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
 
         mSearchButton = (Button) findViewById(R.id.search_button);
 
@@ -140,15 +165,16 @@ public class SummaryActivity extends AppCompatActivity {
         mMealsResearch = (AutoCompleteTextView)findViewById(R.id.wishingmeals_edittext);
         mMealsResearch.setAdapter(adapter);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
 
                 if (id == R.id.nav_meals) {
-                    mToolbar.setTitle("食事");
-                    Log.d("TESTEST", "この機能は未だ作り途中です");
+                    mToolbar.setTitle("Today");
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.nav_nuetrition) {
                     mToolbar.setTitle("栄養");
                     Log.d("TESTEST", "この機能は未だ作り途中です");

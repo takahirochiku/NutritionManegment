@@ -77,10 +77,10 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
     String mAmount,mData,mData2,mDate;
-    public int mCalorieSum;
+    public static int mCalorieSum;
     public static int mProteinSum;
-    public int mFiberSum;
-    public int mCalciumSum;
+    public static int mFiberSum;
+    public static int mCalciumSum;
     int mDataid,mDataid2;
     int mInputAmount;
     String NutritionName;
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle("トップ!");
+        setTitle("TODAY");
 
 
         checkRecDataid();
@@ -167,13 +167,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 int id = item.getItemId();
 
                 if (id == R.id.nav_meals) {
-                    mToolbar.setTitle("食事");
-                    Log.d("TESTEST", "この機能は未だ作り途中です");
+                    mToolbar.setTitle("Today");
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.nav_nuetrition) {
                     mToolbar.setTitle("栄養");
                     Log.d("TESTEST", "この機能は未だ作り途中です");
                 } else if (id == R.id.nav_saumary) {
-                    mToolbar.setTitle("サマリー");
+                    mToolbar.setTitle("Summary");
                     Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
                     startActivity(intent);
                 }
