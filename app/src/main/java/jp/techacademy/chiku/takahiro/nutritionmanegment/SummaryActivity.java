@@ -26,24 +26,40 @@ import android.widget.TextView;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mCalciumAmount2;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mCalciumSum;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mCalorieAmount2;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mCalorieSum;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mFiberAmount2;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mFiberSum;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinAmount2;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.MainActivity.mProteinSum;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.LessProtein;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.MuchProtein;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.LessCalorie;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.MuchCalorie;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.LessFiber;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.MuchFiber;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.LessCalcium;
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.MuchCalcium;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.today_text2;
 import static jp.techacademy.chiku.takahiro.nutritionmanegment.R.id.today_text3;
 
 public class SummaryActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
-    String Protein;
     double mVolume;
     TextView ProteinLess,ProteinMuch,ProteinLessWords,ProteinMuchWords;
+    TextView CalorieLess,CalorieMuch,CalorieLessWords,CalorieMuchWords;
+    TextView FiberLess,FiberMuch,FiberLessWords,FiberMuchWords;
+    TextView CalciumLess,CalciumMuch,CalciumLessWords,CalciumMuchWords;
     private ListView mListView;
     private ArrayAdapter<CharSequence> adapter;
     private SummaryAdapter mSummaryAdapter;
@@ -101,7 +117,13 @@ public class SummaryActivity extends AppCompatActivity {
         });
 
         summaryviewLess("Protein",mProteinSum,mProteinAmount2,ProteinLess,ProteinLessWords,LessProtein,today_text2);
+        summaryviewLess("Calorie",mCalorieSum,mCalorieAmount2,CalorieLess,CalorieLessWords,LessCalorie,today_text2);
+        summaryviewLess("Fiber",mFiberSum,mFiberAmount2,FiberLess,FiberLessWords,LessFiber,today_text2);
+        summaryviewLess("Calcium",mCalciumSum,mCalciumAmount2,CalciumLess,CalciumLessWords,LessCalcium,today_text2);
         summaryviewMuch("Protein",mProteinSum,mProteinAmount2,ProteinMuch,ProteinMuchWords,MuchProtein,today_text3);
+        summaryviewMuch("Calorie",mCalorieSum,mCalorieAmount2,CalorieMuch,CalorieMuchWords,MuchCalorie,today_text3);
+        summaryviewMuch("Fiber",mFiberSum,mFiberAmount2,FiberMuch,FiberMuchWords,MuchFiber,today_text3);
+        summaryviewMuch("Calcium",mCalciumSum,mCalciumAmount2,CalciumMuch,CalciumMuchWords,MuchCalcium,today_text3);
 
         TextView dateText = (TextView)findViewById(R.id.today_text1) ;
         InputActivity.calendar();
@@ -141,20 +163,21 @@ public class SummaryActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //getRecipeRanking();
     }
 
-    /**private void summaryview(String NutritionName, int actualSum, String recommendedAmount, TextView textLess, TextView textMuch){
+    /**private void getRecipeRanking() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("format", json);
+        params.put("formatVersiont",1);
+        params.put("hits", 30);
+        params.put("applicationId", applicationId);
+        if (!affiliateId.isEmpty())
+            params.put("affiliateId", affiliateId);
 
-        int recommendedAmount2 =Integer.parseInt(recommendedAmount);
-        int volume =actualSum/recommendedAmount2;
 
-        if (volume <0.75){
-            textLess.setText(NutritionName);
-            textMuch.setVisibility(View.INVISIBLE);
-        }else if(volume > 1.50){
-            textMuch.setText(NutritionName);
-            textLess.setVisibility(View.INVISIBLE);
-        }
+
     }*/
 
     private void summaryviewLess(String NutritionName, int actualSum, String recommendedAmount, TextView textLess,TextView textLessWords,int textViewLessid,int textViewLessWordsid) {
@@ -165,7 +188,7 @@ public class SummaryActivity extends AppCompatActivity {
         textLess =(TextView)findViewById(textViewLessid);
         textLessWords =(TextView)findViewById(textViewLessWordsid);
         if (mVolume <=0.75){
-            textLess.setText(NutritionName);
+            textLess.setText(NutritionName+" ");
         }else if(mVolume >= 1.50){
             textLess.setVisibility(View.INVISIBLE);
             textLessWords.setVisibility(View.INVISIBLE);
