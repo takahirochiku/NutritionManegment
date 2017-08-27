@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import static jp.techacademy.chiku.takahiro.nutritionmanegment.SummaryActivity.mMealsText;
+
 public class Resipesite extends AppCompatActivity {
 
     private Toolbar mToolbar;
@@ -24,7 +26,8 @@ public class Resipesite extends AppCompatActivity {
 
         WebView  myWebView = (WebView)findViewById(R.id.webView1);
         myWebView.setWebViewClient(new WebViewClient());
-        myWebView.loadUrl("https://recipe.rakuten.co.jp/");
+        Log.d("TEST","mMealsText:"+mMealsText);
+        myWebView.loadUrl("https://recipe.rakuten.co.jp/search/"+mMealsText+"/");
         myWebView.getSettings().setJavaScriptEnabled(true);
 
     }

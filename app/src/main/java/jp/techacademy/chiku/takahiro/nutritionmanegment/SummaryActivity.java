@@ -64,6 +64,7 @@ public class SummaryActivity extends AppCompatActivity {
     private ArrayAdapter<CharSequence> adapter;
     private SummaryAdapter mSummaryAdapter;
     private AutoCompleteTextView mMealsResearch;
+    public static String mMealsText;
     private Button mSearchButton,mSiteRecipeButton;
 
 
@@ -77,6 +78,10 @@ public class SummaryActivity extends AppCompatActivity {
 
         mSummaryAdapter = new SummaryAdapter(SummaryActivity.this);
         mListView = (ListView) findViewById(R.id.listView1);
+
+        adapter = ArrayAdapter.createFromResource(this, R.array.list4, android.R.layout.simple_dropdown_item_1line);
+        mMealsResearch = (AutoCompleteTextView)findViewById(R.id.wishingmeals_edittext);
+        mMealsResearch.setAdapter(adapter);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
@@ -112,11 +117,13 @@ public class SummaryActivity extends AppCompatActivity {
                                                  InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                                                  im.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
+                                                 mMealsText = mMealsResearch.getText().toString();
+
                                                  if (v.getId() == R.id.search_button) {
                                                      if (mMealsResearch.length() != 0) {
                                                          Realm mRealm = Realm.getDefaultInstance();
                                                          RealmQuery<InputData> query = mRealm.where(InputData.class);
-                                                         query.equalTo("Meals", mMealsResearch.getText().toString());
+                                                         query.equalTo("Meals", mMealsText);
                                                          RealmResults<InputData> result1 = query.findAll();
                                                          mSummaryAdapter.setSummaryList(mRealm.copyFromRealm(result1));
                                                          mListView.setAdapter(mSummaryAdapter);
@@ -172,9 +179,7 @@ public class SummaryActivity extends AppCompatActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        adapter = ArrayAdapter.createFromResource(this, R.array.list4, android.R.layout.simple_dropdown_item_1line);
-        mMealsResearch = (AutoCompleteTextView)findViewById(R.id.wishingmeals_edittext);
-        mMealsResearch.setAdapter(adapter);
+
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
