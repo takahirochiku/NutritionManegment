@@ -38,25 +38,14 @@ import io.realm.RealmQuery;
 
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
-    protected HorizontalBarChart mProteinChart;
-    protected HorizontalBarChart mCalorieChart;
-    protected HorizontalBarChart mFiberChart;
-    protected HorizontalBarChart mCalciumChart;
+    ArrayList<HorizontalBarChart> list = new ArrayList<HorizontalBarChart>();
+    protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
     Spinner mSpinnerAge;
     String NutritionName;
-    String mSex;
-    String mAge;
-    String mUser;
-    String mAmount;
-    String mProteinAmount;
-    String mProteinAmount2;
+    String mSex,mAge,mUser,mAmount;
+    String mProteinAmount,mProteinAmount2;
     int mProteinAmount3;
-    String mCalorieAmount;
-    String mCalorieAmount2;
-    String  mFiberAmount;
-    String  mFiberAmount2;
-    String  mCalciumAmount;
-    String  mCalciumAmount2;
+    String mCalorieAmount,mCalorieAmount2,mFiberAmount,mFiberAmount2,mCalciumAmount,mCalciumAmount2;
 
     protected RectF mOnValueSelectedRectF = new RectF();
 
@@ -82,20 +71,13 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         //((Spinner) findViewById(R.id.age_select)).setSelection(mAgecall);
         sharedpreferenceGet();
 
-        ArrayList<HorizontalBarChart>list = new ArrayList<>();
+        list = new ArrayList<>();
         list.add(mProteinChart);
         list.add(mCalorieChart);
         list.add(mFiberChart);
         list.add(mCalciumChart);
 
-        for (HorizontalBarChart chart:list) {
-            setChart(chart);
-            getXAxis(chart);
-            getAxisLeft(chart);
-            getAxisRight(chart);
-            getLegend(chart);
-            barData(chart);
-        }
+        chartsetting();
 
         mSpinnerAge = (Spinner) findViewById(R.id.age_select);
         String[] AgeList = getResources().getStringArray(R.array.list);
@@ -169,6 +151,17 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             }
         });
 
+    }
+
+    private void chartsetting() {
+            for (HorizontalBarChart chart:list) {
+                setChart(chart);
+                getXAxis(chart);
+                getAxisLeft(chart);
+                getAxisRight(chart);
+                getLegend(chart);
+                barData(chart);
+            }
     }
 
     @Override
@@ -335,6 +328,17 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         Nutritiondata resultCalcium = query4.findFirst();
         mCalciumAmount = String.valueOf(resultCalcium.getAmount());
         Log.d("TEST","Score:"+mCalciumAmount);
+
+        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Const.ProteinAmountPATH, mProteinAmount);
+        editor.putString(Const.CalorieAmountPATH,mCalorieAmount);
+        editor.putString(Const.FiberAmountPATH,mFiberAmount);
+        editor.putString(Const.CalciumAmountPATH,mCalciumAmount);
+        editor.commit();
+
+        sharedpreferenceGet();
+        chartsetting();
     }
 
     private void sharedpreference(View view){
