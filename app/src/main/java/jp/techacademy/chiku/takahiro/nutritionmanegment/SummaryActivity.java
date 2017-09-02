@@ -65,7 +65,7 @@ public class SummaryActivity extends AppCompatActivity {
     private SummaryAdapter mSummaryAdapter;
     private AutoCompleteTextView mMealsResearch;
     public static String mMealsText;
-    private Button mSearchButton,mSiteRecipeButton;
+    private Button mSearchButton,mSiteRecipeButton,mReciperankingButton;
 
 
     @Override
@@ -145,7 +145,14 @@ public class SummaryActivity extends AppCompatActivity {
             }
         });
 
-
+        mReciperankingButton = (Button) findViewById(R.id.reciperanking_button);
+        mReciperankingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RecipeRanking.class);
+                startActivity(intent);
+            }
+        });
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
