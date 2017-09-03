@@ -66,15 +66,6 @@ import static jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity.yea
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     private Toolbar mToolbar;
-
-
-    /*private RealmChangeListener mRealmListener = new RealmChangeListener() {
-        @Override
-        public void onChange(Object element) {
-            reloadListView();
-        }
-    };*/
-
     protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
     String mAmount,mData,mData2,mDate;
     public static int mCalorieSum;

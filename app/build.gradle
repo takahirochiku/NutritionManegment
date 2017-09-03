@@ -51,4 +51,16 @@ dependencies {
 dependencies {
     compile 'com.android.support.constraint:constraint-layout:+'
 }
-
+dependencies {
+    compile 'com.android.support.constraint:constraint-layout:+'
+}
+dependencies {compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
+}
+dependencies {
+    compile 'biz.devalon.stella:rakutenapiclient:0.0.7'
+}
+android {
+    repositories {
+        maven {url 'https://repo.spring.io/libs-milestone' }
+    }
+}

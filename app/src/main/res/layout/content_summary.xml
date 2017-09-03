@@ -12,8 +12,7 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SummaryActivity"
-    tools:showIn="@layout/app_bar_summary"
-    android:weightSum="1">
+    tools:showIn="@layout/app_bar_summary">
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,93 +30,89 @@
             android:id="@+id/LessProtein"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="0.5dp"
             android:text=""
             android:textColor="#FF0000"
-            android:textSize="18sp"
-            android:layout_marginTop="0.5dp"
-            />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/LessCalorie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#FF0000"
-            android:textSize="18sp"
             android:layout_marginTop="0.5dp"
             android:layout_toRightOf="@+id/LessProtein"
-            />
+            android:text=""
+            android:textColor="#FF0000"
+            android:textSize="18sp" />
 
 
         <TextView
             android:id="@+id/LessCalcium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#FF0000"
-            android:textSize="18sp"
             android:layout_marginTop="0.5dp"
             android:layout_toRightOf="@+id/LessCalorie"
-            />
+            android:text=""
+            android:textColor="#FF0000"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/LessFiber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#FF0000"
-            android:textSize="18sp"
             android:layout_marginTop="0.5dp"
             android:layout_toRightOf="@+id/LessCalcium"
-            />
+            android:text=""
+            android:textColor="#FF0000"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/today_text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/LessProtein"
-            android:textSize="15sp"
-            android:text="をもっと摂取しましょう" />
+            android:text="をもっと摂取しましょう"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/MuchProtein"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/today_text2"
-            android:textSize="20sp"
-            android:text="" />
+            android:text=""
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/MuchCalorie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/MuchProtein"
-            android:textSize="20sp"
-            android:text="" />
+            android:text=""
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/MuchCalcium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/MuchCalorie"
-            android:textSize="20sp"
-            android:text="" />
+            android:text=""
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/MuchFiber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/MuchCalcium"
-            android:textSize="20sp"
-            android:text="" />
+            android:text=""
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/today_text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/MuchProtein"
-            android:textSize="15sp"
-            android:text="の摂取を控えましょう" />
+            android:text="の摂取を控えましょう"
+            android:textSize="15sp" />
 
         <AutoCompleteTextView
             android:id="@+id/wishingmeals_edittext"
@@ -141,16 +136,24 @@
             android:id="@+id/listView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/search_button"/>
-
-
+            android:layout_below="@+id/search_button" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/siterecipe_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="right"
+        android:text="レシピ検索" />
+
+    <Button
+        android:id="@+id/reciperanking_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="レシピ検索" />
+        android:layout_marginTop="10dp"
+        android:text="レシピランキング" />
+
+
 
 </LinearLayout>

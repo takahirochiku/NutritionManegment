@@ -34,7 +34,11 @@
             android:name=".RecipeActivity"
             android:label="@string/title_activity_recipe"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Resipesite"></activity>
+        <activity android:name=".Resipesite" />
+        <activity
+            android:name=".RecipeRanking"
+            android:label="@string/title_activity_recipe_ranking"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
