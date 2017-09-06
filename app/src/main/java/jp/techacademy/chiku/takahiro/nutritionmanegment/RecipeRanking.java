@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 
@@ -76,7 +77,20 @@ public class RecipeRanking extends AppCompatActivity {
                 }
 
                 Log.d("TEST","result:"+result);
-                JsonArray resultArray = result.getAsJsonArray("result");
+
+                if (result.get("result") != null) {
+                    JsonArray resultArray = result.getAsJsonArray("result");
+                    for(int i = 0; i < resultArray.size(); i++){
+                        JsonObject objectrDataJson=(JsonObject) resultArray.get(i);
+                        //オブジェクト内のデータの取得
+                        Log.d("TEST",objectrDataJson.get("recipeUrl").toString());
+
+                        //System.out.println(objectrDataJson.get("c"));
+                        //System.out.println(objectrDataJson.get("e"));
+                    }
+                }
+
+                /**JsonArray resultArray = result.getAsJsonArray("result");
                 int count = resultArray.size();
                 Log.d("TEST","count:"+count);
 
@@ -87,9 +101,9 @@ public class RecipeRanking extends AppCompatActivity {
                     recipeObject[i] = resultArray.getAsJsonObject(i);
                 }
 
-                /**for (int i=0; i<recipeObject.length; i++){
+                for (int i=0; i<recipeObject.length; i++){
                     String title =recipeObject[i].getString("recipeTitle");
-                }*/
+                }
 
                 //List<Map> items = (List<Map>) result.get("items");
                 /**for (Map result: result) {
