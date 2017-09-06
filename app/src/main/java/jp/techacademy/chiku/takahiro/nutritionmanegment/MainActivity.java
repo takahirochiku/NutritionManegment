@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle("TODAY");
+        setTitle("Today");
 
 
         checkRecDataid();
