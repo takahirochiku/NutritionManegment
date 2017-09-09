@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,7 +38,8 @@ public class RecipeRanking extends AppCompatActivity {
      * private final String mCategoryId = "10";
      */
 
-    JSONObject mJsonObject;
+    private ListView mRecipeListView;
+    private RecipeRankingAdapter mRecipeRankingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,9 @@ public class RecipeRanking extends AppCompatActivity {
                 .create(ApiSelecter.RecipeCategoryRanking)
                 .setCallback(callback)
                 .get(params);
+
+         //mRecipeRankingAdapter =new RecipeRankingAdapter(RecipeRanking.this);
+         //mRecipeListView =(ListView) findViewById(R.id.)
     }
 
     //private List<RecipeRankingData> recipeRankingList = new ArrayList<>();
