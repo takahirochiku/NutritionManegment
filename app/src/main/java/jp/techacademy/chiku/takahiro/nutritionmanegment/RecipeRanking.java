@@ -35,20 +35,23 @@ import io.realm.RealmModel;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
+import static java.lang.Integer.parseInt;
+
 
 public class RecipeRanking extends AppCompatActivity {
 
-    private Realm mRealm;
-    private RealmChangeListener mRealmListener = new RealmChangeListener() {
+    /**private RealmChangeListener mRealmListener = new RealmChangeListener() {
         @Override
         public void onChange(Object element) {
             reloadListView();
         }
-    };
+    };*/
 
+    private Realm mRealm;
     private ListView mRecipeListView;
     private RecipeRankingAdapter mRecipeRankingAdapter;
-    private String mTitle,mRecipeUrl,mImageUrl,mTime,mCost,mRank;
+    private String mTitle,mRecipeUrl,mImageUrl,mTime,mCost;
+    private int mRank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +69,8 @@ public class RecipeRanking extends AppCompatActivity {
             }
         });
 
-        mRealm = Realm.getDefaultInstance();
-        mRealm.addChangeListener(mRealmListener);
+        //Realm realm = Realm.getDefaultInstance();
+        //realm.beginTransaction();
 
         //mRecipeRankingAdapter = new RecipeRankingAdapter(RecipeRanking.this);
         mRecipeListView = (ListView) findViewById(R.id.listView1);
@@ -98,8 +101,8 @@ public class RecipeRanking extends AppCompatActivity {
 
         reloadListView();
 
-         //mRecipeRankingAdapter =new RecipeRankingAdapter(RecipeRanking.this);
-         //mRecipeListView =(ListView) findViewById(R.id.)
+         mRecipeRankingAdapter =new RecipeRankingAdapter(RecipeRanking.this);
+         mRecipeListView =(ListView) findViewById(R.id.listView1);
     }
 
     FutureCallback<JsonObject> callback = new FutureCallback<JsonObject>() {
@@ -123,7 +126,8 @@ public class RecipeRanking extends AppCompatActivity {
                         mImageUrl = objectrDataJson.get("smallImageUrl").toString();
                         mTime = objectrDataJson.get("recipeIndication").toString();
                         mCost = objectrDataJson.get("recipeCost").toString();
-                        mRank = objectrDataJson.get("rank").toString();
+                        String rank = objectrDataJson.get("rank").toString();
+                        mRank = Integer.parseInt(rank);
                         Log.d("TEST","title:"+mTitle);
                         Log.d("TEST","recipeUrl:"+mRecipeUrl);
                         Log.d("TEST","imageUrl:"+mImageUrl);
@@ -136,24 +140,31 @@ public class RecipeRanking extends AppCompatActivity {
 
     private void addRecipeRanking() {
 
+        mRealm = Realm.getDefaultInstance();
+        mRrealm.beginTransaction();
+
         RecipeRankingData reciperankingdata = new RecipeRankingData();
         reciperankingdata.setRecipeTitle(mTitle);
         reciperankingdata.setRecipeUrl(mRecipeUrl);
         reciperankingdata.setSmallImageUrl(mImageUrl);
         reciperankingdata.setRecipeIndication(mTime);
         reciperankingdata.setRecipeCost(mCost);
-        reciperankingdata.setRecipeCost(mRank);
+        reciperankingdata.setRank(mRank);
 
-        mRealm.beginTransaction();
-        mRealm.copyToRealmOrUpdate(reciperankingdata);
-        mRealm.commitTransaction();
+
+        mRrealm.copyToRealmOrUpdate(reciperankingdata);
+        mRrealm.commitTransaction();
+
+        realm.close();
 
     }
 
     private void reloadListView() {
 
+        Realm mRealm = Realm.getDefaultInstance();
+
         // Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
-        RealmResults<RecipeRankingData> recipeRealmResults = mRealm.where(RecipeRankingData.class).findAllSorted("rank", Sort.DESCENDING);
+        RealmResults<RecipeRankingData> recipeRealmResults = mRealm.where(RecipeRankingData.class).findAllSorted("Rank", Sort.DESCENDING);
         mRecipeRankingAdapter.setRecipeRankingList(mRealm.copyFromRealm(recipeRealmResults));
         // TaskのListView用のアダプタに渡す
         mRecipeListView.setAdapter(mRecipeRankingAdapter);
@@ -162,31 +173,12 @@ public class RecipeRanking extends AppCompatActivity {
 
     }
 
-                /**JsonArray resultArray = result.getAsJsonArray("result");
-                int count = resultArray.size();
-                Log.d("TEST","count:"+count);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
-                JSONObject[] recipeObject = new JSONObject[count];
-                Log.d("TEST","recipeObject:"+recipeObject);
-
-                for (int i=0; i<count; i++){
-                    recipeObject[i] = resultArray.getAsJsonObject(i);
-                }
-
-                for (int i=0; i<recipeObject.length; i++){
-                    String title =recipeObject[i].getString("recipeTitle");
-                }
-
-                //List<Map> items = (List<Map>) result.get("items");
-                /**for (Map result: result) {
-                    String title = (String) result.get("recipeTitle");
-                    String recipeUrl = (String) result.get("recipeUrl");
-                    String imageUrl = (String) result.get("smallImageUrl");
-                    String time = (String) result.get("recipeIndication");
-                    String cost = (String) result.get("recipeCost");
-                    Log.d("TEST","title:"+title);
-                }*/
-
+        mRealm.close();
+    }
 }
 
 
