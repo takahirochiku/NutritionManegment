@@ -1,16 +1,30 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
+import java.io.Serializable;
+
+import io.realm.RealmObject;
+
 /**
  * Created by takahiro chiku on 2017/09/02.
  */
 
-public class RecipeRankingData {
+public class RecipeRankingData extends RealmObject implements Serializable {
     private String RecipeId;
     private String RecipeTitle;
-    private String RecipeUrl;
+    public static String RecipeUrl;
     private String SmallImageUrl;
     private String RecipeIndication;
     private String RecipeCost;
+
+    public String getRecipeRank() {
+        return RecipeRank;
+    }
+
+    public void setRecipeRank(String recipeRank) {
+        RecipeRank = recipeRank;
+    }
+
+    private String RecipeRank;
 
     public String getRecipeId() {
         return RecipeId;

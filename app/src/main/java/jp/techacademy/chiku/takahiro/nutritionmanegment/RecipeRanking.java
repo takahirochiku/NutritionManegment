@@ -1,5 +1,6 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.JsonArray;
@@ -27,19 +29,26 @@ import java.util.Map;
 
 import biz.devalon.stella.rakutenapiclient.ApiSelecter;
 import biz.devalon.stella.rakutenapiclient.Rakuten;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmModel;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 
 public class RecipeRanking extends AppCompatActivity {
 
-    /**
-     * private final String mFormat = "json";
-     * private final int mFormatVersion = 1;
-     * private final String mAppicationId = "1093116609709872158";
-     * private final String mCategoryId = "10";
-     */
+    private Realm mRealm;
+    private RealmChangeListener mRealmListener = new RealmChangeListener() {
+        @Override
+        public void onChange(Object element) {
+            reloadListView();
+        }
+    };
 
     private ListView mRecipeListView;
     private RecipeRankingAdapter mRecipeRankingAdapter;
+    private String mTitle,mRecipeUrl,mImageUrl,mTime,mCost,mRank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,23 @@ public class RecipeRanking extends AppCompatActivity {
             }
         });
 
+        mRealm = Realm.getDefaultInstance();
+        mRealm.addChangeListener(mRealmListener);
+
+        //mRecipeRankingAdapter = new RecipeRankingAdapter(RecipeRanking.this);
+        mRecipeListView = (ListView) findViewById(R.id.listView1);
+
+        mRecipeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(getApplicationContext(), Resipesite.class);
+                startActivity(intent);
+
+                return true;
+            }
+        });
+
         Rakuten.initialize(this, "1093116609709872158");
         Rakuten.setLogging("test", Log.DEBUG);
 
@@ -68,12 +94,15 @@ public class RecipeRanking extends AppCompatActivity {
                 .setCallback(callback)
                 .get(params);
 
+        addRecipeRanking();
+
+        reloadListView();
+
          //mRecipeRankingAdapter =new RecipeRankingAdapter(RecipeRanking.this);
          //mRecipeListView =(ListView) findViewById(R.id.)
     }
 
-    //private List<RecipeRankingData> recipeRankingList = new ArrayList<>();
-        FutureCallback<JsonObject> callback = new FutureCallback<JsonObject>() {
+    FutureCallback<JsonObject> callback = new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
                 if (e != null) {
@@ -89,11 +118,49 @@ public class RecipeRanking extends AppCompatActivity {
                         JsonObject objectrDataJson=(JsonObject) resultArray.get(i);
                         //オブジェクト内のデータの取得
                         Log.d("TEST",objectrDataJson.get("recipeUrl").toString());
-
-                        //System.out.println(objectrDataJson.get("c"));
-                        //System.out.println(objectrDataJson.get("e"));
+                        mTitle = objectrDataJson.get("recipeTitle").toString();
+                        mRecipeUrl = objectrDataJson.get("recipeUrl").toString();
+                        mImageUrl = objectrDataJson.get("smallImageUrl").toString();
+                        mTime = objectrDataJson.get("recipeIndication").toString();
+                        mCost = objectrDataJson.get("recipeCost").toString();
+                        mRank = objectrDataJson.get("rank").toString();
+                        Log.d("TEST","title:"+mTitle);
+                        Log.d("TEST","recipeUrl:"+mRecipeUrl);
+                        Log.d("TEST","imageUrl:"+mImageUrl);
+                        Log.d("TEST","time:"+mTime);
+                        Log.d("TEST","cost:"+mCost);
                     }
                 }
+            }
+    };
+
+    private void addRecipeRanking() {
+
+        RecipeRankingData reciperankingdata = new RecipeRankingData();
+        reciperankingdata.setRecipeTitle(mTitle);
+        reciperankingdata.setRecipeUrl(mRecipeUrl);
+        reciperankingdata.setSmallImageUrl(mImageUrl);
+        reciperankingdata.setRecipeIndication(mTime);
+        reciperankingdata.setRecipeCost(mCost);
+        reciperankingdata.setRecipeCost(mRank);
+
+        mRealm.beginTransaction();
+        mRealm.copyToRealmOrUpdate(reciperankingdata);
+        mRealm.commitTransaction();
+
+    }
+
+    private void reloadListView() {
+
+        // Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
+        RealmResults<RecipeRankingData> recipeRealmResults = mRealm.where(RecipeRankingData.class).findAllSorted("rank", Sort.DESCENDING);
+        mRecipeRankingAdapter.setRecipeRankingList(mRealm.copyFromRealm(recipeRealmResults));
+        // TaskのListView用のアダプタに渡す
+        mRecipeListView.setAdapter(mRecipeRankingAdapter);
+        // 表示を更新するために、アダプターにデータが変更されたことを知らせる
+        mRecipeRankingAdapter.notifyDataSetChanged();
+
+    }
 
                 /**JsonArray resultArray = result.getAsJsonArray("result");
                 int count = resultArray.size();
@@ -119,8 +186,7 @@ public class RecipeRanking extends AppCompatActivity {
                     String cost = (String) result.get("recipeCost");
                     Log.d("TEST","title:"+title);
                 }*/
-            }
-        };
+
 }
 
 

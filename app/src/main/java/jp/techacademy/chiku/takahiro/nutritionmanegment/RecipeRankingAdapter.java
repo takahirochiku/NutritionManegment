@@ -11,21 +11,21 @@ import java.util.List;
 
 public class RecipeRankingAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
-    private List<String> mRecipeRankingList;
+    private List<RecipeRankingData> mRecipeRankingList;
 
-    private void setRecipeRankingList(List<String> recipeRankingList) {
+    void setRecipeRankingList(List<RecipeRankingData> recipeRankingList) {
         mRecipeRankingList = recipeRankingList;
     }
 
 
     @Override
     public int getCount() {
-        return 0;
+        return mRecipeRankingList.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public Object getItem(int position) {
+        return mRecipeRankingList.get(position);
     }
 
     @Override
@@ -33,19 +33,30 @@ public class RecipeRankingAdapter extends BaseAdapter {
         return 0;
     }
 
+    /*@Override
+    public long getItemId(int position) {
+        return mRecipeRankingList.get(position).getId();
+    }*/
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_2, null);
         }
 
-        //TextView textView1 = (TextView) convertView.findViewById(android.R.id.titleTextView);
-        //TextView textView2 = (TextView) convertView.findViewById(android.R.id.timeTextView);
+        TextView textView1 = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView textView2 = (TextView) convertView.findViewById(android.R.id.text2);
         //TextView textView3 = (TextView) convertView.findViewById(android.R.id.costTextView);
 
         // 後でTaskクラスから情報を取得するように変更する
-        //textView1.setText(mRecipeRankingList.get(position));
+        textView1.setText(mRecipeRankingList.get(position).getRecipeTitle());
+
 
         return convertView;
+    }
+
+    @Override
+    public CharSequence[] getAutofillOptions() {
+        return new CharSequence[0];
     }
 }
