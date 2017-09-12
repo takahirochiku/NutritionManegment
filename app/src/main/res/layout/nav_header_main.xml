@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="栄養管理"
+        android:text="NutritionMNG"
         android:textColor="@color/colorButtonText"/>
 
 </LinearLayout>
