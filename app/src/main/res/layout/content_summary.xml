@@ -120,7 +120,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/today_text3"
             android:layout_marginTop="18dp"
-            android:hint="Input what you feel like to(例:卵,鶏肉...)" />
+            android:hint="Input what you feel like to(例:卵,鶏肉...)"
+            android:inputType="text"/>
 
         <Button
             android:id="@+id/search_button"
@@ -147,12 +148,12 @@
         android:layout_gravity="right"
         android:text="レシピ検索" />
 
-    <Button
+    <!--Button
         android:id="@+id/reciperanking_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="レシピランキング" />
+        android:text="レシピランキング" /-->
 
 
 

@@ -1,81 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <Button
-        android:id="@+id/consuming_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="----/--/--"
-        style="@style/Widget.AppCompat.Button.Borderless" />
-
-    <Spinner
-        android:id="@+id/timing_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:entries="@array/list2"
-        android:spinnerMode="dialog" />
-
-    <!--Spinner
-        android:id="@+id/MealsCategory_select"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:entries="@array/list3"
-        android:spinnerMode="dialog" /-->
-
-    <AutoCompleteTextView
+    <include
+        layout="@layout/app_bar_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/Meals_EditText"
-        android:hint="Input what you had(例:卵,鶏肉...)"/>
+        android:layout_height="match_parent"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity">
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer"/>
 
-        <EditText
-            android:id="@+id/Count_EditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="How much you had"
-            android:layout_alignBaseline="@+id/register_button"
-            android:layout_alignBottom="@+id/register_button"
-            android:inputType="number"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:id="@+id/today_text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/register_button"
-            android:layout_toEndOf="@+id/Count_EditText"
-            android:textColor="#FF0000"
-            android:text="/100g"
-            android:textSize="24dp"/>
-
-        <Button
-            android:id="@+id/register_button"
-            android:layout_width="55dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:gravity="right"
-            android:text="登録" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>

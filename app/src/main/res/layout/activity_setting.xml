@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,114 +9,10 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity">
-
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Choose your age"
-    android:id="@+id/textView1"/>
-
-<Spinner
-    android:id="@+id/age_select"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:entries="@array/list"
-    android:spinnerMode="dialog" />
-
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Choose your sex"
-    android:id="@+id/textView2"/>
-
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.SettingActivity">
-
-    <RadioGroup android:id="@+id/radiogroup"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <RadioButton android:id="@+id/radiobutton_male"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="男性" />
-        <RadioButton android:id="@+id/radiobutton_female"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="女性" />
-    </RadioGroup>
-
-</RelativeLayout>
-
-    <EditText
+    <include
+        layout="@layout/app_bar_setting"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/username_editText"
-        android:hint="username"/>
-
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        tools:context="jp.techacademy.chiku.takahiro.nutritionmanegment.InputActivity">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:id="@+id/setting_button"
-        android:text="設定"
-        android:layout_alignParentEnd="true"/>
-
-    </RelativeLayout>
-
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/protein_chart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white" />
-
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/calorie_chart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white" />
-
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/fiber_chart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white" />
-
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/calcium_chart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white" />
-
-</LinearLayout>
+        android:layout_height="match_parent"/>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

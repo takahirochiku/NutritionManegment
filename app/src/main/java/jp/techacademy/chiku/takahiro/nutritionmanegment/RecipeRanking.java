@@ -38,14 +38,7 @@ import io.realm.Sort;
 import static java.lang.Integer.parseInt;
 
 
-public class RecipeRanking extends AppCompatActivity {
-
-    /**private RealmChangeListener mRealmListener = new RealmChangeListener() {
-        @Override
-        public void onChange(Object element) {
-            reloadListView();
-        }
-    };*/
+/**public class RecipeRanking extends AppCompatActivity {
 
     private Realm mRealm;
     private ListView mRecipeListView;
@@ -69,10 +62,10 @@ public class RecipeRanking extends AppCompatActivity {
             }
         });
 
-        //Realm realm = Realm.getDefaultInstance();
-        //realm.beginTransaction();
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
 
-        //mRecipeRankingAdapter = new RecipeRankingAdapter(RecipeRanking.this);
+        mRecipeRankingAdapter = new RecipeRankingAdapter(RecipeRanking.this);
         mRecipeListView = (ListView) findViewById(R.id.listView1);
 
         mRecipeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -179,7 +172,7 @@ public class RecipeRanking extends AppCompatActivity {
 
         mRealm.close();
     }
-}
+}*/
 
 
 

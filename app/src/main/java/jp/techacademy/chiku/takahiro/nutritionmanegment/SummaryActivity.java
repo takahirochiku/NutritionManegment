@@ -76,6 +76,12 @@ public class SummaryActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         setTitle("Summary");
 
+        // ナビゲーションドロワーの設定
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
         mSummaryAdapter = new SummaryAdapter(SummaryActivity.this);
         mListView = (ListView) findViewById(R.id.listView1);
 
@@ -94,10 +100,12 @@ public class SummaryActivity extends AppCompatActivity {
                     mToolbar.setTitle("Today");
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
-                } else if (id == R.id.nav_nuetrition) {
+                }
+                /**else if (id == R.id.nav_nuetrition) {
                     mToolbar.setTitle("栄養");
                     Log.d("TESTEST", "この機能は未だ作り途中です");
-                } else if (id == R.id.nav_saumary) {
+                }*/
+                 else if (id == R.id.nav_saumary) {
                     mToolbar.setTitle("Summary");
                     Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
                     startActivity(intent);
@@ -116,7 +124,6 @@ public class SummaryActivity extends AppCompatActivity {
 
                                                  InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                                                  im.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
                                                  mMealsText = mMealsResearch.getText().toString();
 
                                                  if (v.getId() == R.id.search_button) {
@@ -139,20 +146,24 @@ public class SummaryActivity extends AppCompatActivity {
         mSiteRecipeButton = (Button) findViewById(R.id.siterecipe_button);
         mSiteRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Resipesite.class);
-                startActivity(intent);
+            public void onClick(View view) {
+                if(mMealsResearch.length() != 0){
+                    Intent intent = new Intent(getApplicationContext(), Resipesite.class);
+                    startActivity(intent);
+                }else{
+                    Snackbar.make(view, "入力してください", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
-        mReciperankingButton = (Button) findViewById(R.id.reciperanking_button);
+        /**mReciperankingButton = (Button) findViewById(R.id.reciperanking_button);
         mReciperankingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RecipeRanking.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -180,38 +191,6 @@ public class SummaryActivity extends AppCompatActivity {
         String today = InputActivity.year+"年"+InputActivity.month+"月"+InputActivity.day+"月";
         dateText.setText(today);
 
-        // ナビゲーションドロワーの設定
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.nav_meals) {
-                    mToolbar.setTitle("Today");
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                } else if (id == R.id.nav_nuetrition) {
-                    mToolbar.setTitle("栄養");
-                    Log.d("TESTEST", "この機能は未だ作り途中です");
-                } else if (id == R.id.nav_saumary) {
-                    mToolbar.setTitle("サマリー");
-                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
-                    startActivity(intent);
-
-                }
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        });
 
         //getRecipeRanking();
     }

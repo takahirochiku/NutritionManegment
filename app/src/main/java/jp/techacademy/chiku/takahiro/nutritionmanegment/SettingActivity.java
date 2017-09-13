@@ -62,10 +62,8 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setTitle("設定");
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setSupportActionBar(mToolbar);
+        setTitle("Setting");
 
         // ナビゲーションドロワーの設定
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -84,10 +82,12 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                     mToolbar.setTitle("Today");
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
-                } else if (id == R.id.nav_nuetrition) {
+                }
+                /**else if (id == R.id.nav_nuetrition) {
                     mToolbar.setTitle("栄養");
                     Log.d("TESTEST", "この機能は未だ作り途中です");
-                } else if (id == R.id.nav_saumary) {
+                }*/
+                 else if (id == R.id.nav_saumary) {
                     mToolbar.setTitle("Summary");
                     Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
                     startActivity(intent);
@@ -98,26 +98,26 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
             }
         });
 
-        mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart);
+        /**mProteinChart = (HorizontalBarChart) findViewById(R.id.protein_chart);
         mProteinChart.setOnChartValueSelectedListener(this);
         mCalorieChart = (HorizontalBarChart) findViewById(R.id.calorie_chart);
         mCalorieChart.setOnChartValueSelectedListener(this);
         mFiberChart = (HorizontalBarChart) findViewById(R.id.fiber_chart);
         mFiberChart.setOnChartValueSelectedListener(this);
         mCalciumChart = (HorizontalBarChart) findViewById(R.id.calcium_chart);
-        mCalciumChart.setOnChartValueSelectedListener(this);
+        mCalciumChart.setOnChartValueSelectedListener(this);*/
 
         sharedpreferenceCall();
         //((Spinner) findViewById(R.id.age_select)).setSelection(mAgecall);
         sharedpreferenceGet();
 
-        list = new ArrayList<>();
+        /**list = new ArrayList<>();
         list.add(mProteinChart);
         list.add(mCalorieChart);
         list.add(mFiberChart);
         list.add(mCalciumChart);
 
-        chartsetting();
+        chartsetting();*/
 
         mSpinnerAge = (Spinner) findViewById(R.id.age_select);
         String[] AgeList = getResources().getStringArray(R.array.list);
@@ -186,6 +186,9 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                         //Context.MODE_PRIVATEはセキュリティレベルが：このアプリ限定を示す
                         settingsearch();
                         sharedpreference(view);
+
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
                     }
                 }
             }
@@ -414,6 +417,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                 .equalTo("age",mAge)
                 .equalTo("sex",mSex);
         Nutritiondata resultProtein = query.findFirst();
+        Log.d("TEST","resultProtein："+resultProtein);
         int mAgecall = resultProtein.getId();
 
         Log.d("TEST","mAgeCall2の値："+mAgecall);

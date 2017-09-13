@@ -79,13 +79,44 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         setTitle("Today");
 
+        // ナビゲーションドロワーの設定
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected (MenuItem item){
+                int id = item.getItemId();
+
+                if (id == R.id.nav_meals) {
+                    mToolbar.setTitle("Today");
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+                /**else if (id == R.id.nav_nuetrition) {
+                 mToolbar.setTitle("栄養");
+                 Log.d("TESTEST", "この機能は未だ作り途中です");
+                 }*/
+                else if (id == R.id.nav_saumary) {
+                    mToolbar.setTitle("Summary");
+                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+                    startActivity(intent);
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
 
         checkRecDataid();
 
@@ -144,36 +175,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             }
         });
 
-        // ナビゲーションドロワーの設定
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
-        {
-            @Override
-            public boolean onNavigationItemSelected (MenuItem item){
-                int id = item.getItemId();
-
-                if (id == R.id.nav_meals) {
-                    mToolbar.setTitle("Today");
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                } else if (id == R.id.nav_nuetrition) {
-                    mToolbar.setTitle("栄養");
-                    Log.d("TESTEST", "この機能は未だ作り途中です");
-                } else if (id == R.id.nav_saumary) {
-                    mToolbar.setTitle("Summary");
-                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
-                    startActivity(intent);
-                }
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        });
     }
 
     @Override
@@ -196,8 +197,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     private List<Nutritiondata> nutritionLists = new ArrayList<>();
 
     private void readNutritionData() {
-        //Androidstudioはthisが必須,eclipceはいらないらしい
-
         Realm realm = Realm.getDefaultInstance();
         InputStream is =  this.getResources().openRawResource(R.raw.recomendednutritiondata);
         //リーダーを設定
@@ -446,47 +445,31 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         chart.animateY(2000);
     }
 
-    /*private void reloadListView() {
-        // Realmデータベースから取得
-        RealmResults<Nutritiondata> taskRealmResults1 = mRealm.where(Nutritiondata.class).filter("nutrition =='Calorie_cal'","age == '18～29'","sex == '男性'" );
-        // 上記の結果を、Calorie_cal としてセットする
-        Calorie_cal = mRealm.copyFromRealm(taskRealmResults1);
-
-        RealmResults<Nutritiondata> taskRealmResults2 = mRealm.where(Nutritiondata.class).filter("nutrition =='Protein_g","age == '18～29'","sex == '男性'" );
-        Protein_g = mRealm.copyFromRealm(taskRealmResults2);
-
-        RealmResults<Nutritiondata> taskRealmResults3 = mRealm.where(Nutritiondata.class).filter("nutrition =='Fiber_g","age == '18～29'","sex == '男性'");
-        Fiber_g = mRealm.copyFromRealm(taskRealmResults3);
-
-        RealmResults<Nutritiondata> taskRealmResults4 = mRealm.where(Nutritiondata.class).filter("nutrition =='Calcium_mg","age == '18～29'","sex == '男性'" );
-        Calcium_mg = mRealm.copyFromRealm(taskRealmResults4);
-    }*/
-
     private BarData createHorizontalBarChartData(HorizontalBarChart chart){
 
         ArrayList<IBarDataSet> chart1 = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
 
         if (chart == mProteinChart){
-            NutritionName = "Protein";
+            NutritionName = "Protein_g";
             mAmount = mProteinAmount2;
             mInputAmount = mProteinSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[0]);
         }else if(chart == mCalorieChart){
-            NutritionName = "Calorie";
+            NutritionName = "Calorie_cal";
             mAmount = mCalorieAmount2;
             mInputAmount = mCalorieSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[1]);
         }else if(chart == mFiberChart){
-            NutritionName = "Fiber";
+            NutritionName = "Fiber_g";
             mAmount = mFiberAmount2;
             mInputAmount = mFiberSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
             colors.add(ColorTemplate.COLORFUL_COLORS[2]);
         }else if(chart == mCalciumChart){
-            NutritionName = "Calcium";
+            NutritionName = "Calcium_mg";
             mAmount = mCalciumAmount2;
             mInputAmount = mCalciumSum;
             colors.add(ColorTemplate.COLORFUL_COLORS[4]);
@@ -499,19 +482,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
         chart2.add(new BarEntry(1f,mInputAmount));
         chart2.add(new BarEntry(2f, mAmount2));
-
-        //BarDataSet DataSet1;
-
-        /**if (chart.getData() != null &&
-                chart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
-            set1.setValues(chart2);
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
-        } else {
-            Log.d("TESTTEST", "チャートに入れる数値がありません");
-        }*/
-
+        
         BarDataSet DataSet1 = new BarDataSet(chart2,NutritionName);
         DataSet1.setBarBorderWidth(1f);
 
