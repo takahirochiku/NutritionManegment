@@ -1,13 +1,21 @@
 package jp.techacademy.chiku.takahiro.nutritionmanegment;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -24,6 +32,7 @@ import io.realm.RealmResults;
 
 public class InputActivity extends AppCompatActivity {
 
+    private Toolbar mToolbar;
     Button mDateButton;
     private String mTiming,mDateString,mMeals;
     private int mYear, mMonth, mDay;
@@ -39,7 +48,43 @@ public class InputActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
-        setTitle("新規登録");
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        setTitle("Registration");
+
+        // ナビゲーションドロワーの設定
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected (MenuItem item){
+                int id = item.getItemId();
+
+                if (id == R.id.nav_meals) {
+                    mToolbar.setTitle("Today");
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+                /**else if (id == R.id.nav_nuetrition) {
+                 mToolbar.setTitle("栄養");
+                 Log.d("TESTEST", "この機能は未だ作り途中です");
+                 }*/
+                else if (id == R.id.nav_saumary) {
+                    mToolbar.setTitle("Summary");
+                    Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+                    startActivity(intent);
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
         calendar();
 
         mDateButton = (Button) findViewById(R.id.consuming_button);
@@ -96,6 +141,8 @@ public class InputActivity extends AppCompatActivity {
     private View.OnClickListener mOnDoneClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             addMeals();
             reload();
         }
