@@ -46,16 +46,18 @@ import io.realm.RealmQuery;
 public class SettingActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
     private Toolbar mToolbar;
-    ArrayList<HorizontalBarChart> list = new ArrayList<HorizontalBarChart>();
-    protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
     Spinner mSpinnerAge;
-    String NutritionName;
     String mSex,mAge,mUser,mAmount;
     String mProteinAmount,mProteinAmount2;
-    int mProteinAmount3;
     String mCalorieAmount,mCalorieAmount2,mFiberAmount,mFiberAmount2,mCalciumAmount,mCalciumAmount2;
-
     protected RectF mOnValueSelectedRectF = new RectF();
+    private int mAgeId;
+    protected HorizontalBarChart mProteinChart,mCalorieChart,mFiberChart,mCalciumChart;
+
+    //ArrayList<HorizontalBarChart> list = new ArrayList<HorizontalBarChart>();
+    //String NutritionName;
+    //int mProteinAmount3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +147,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         final RadioGroup mRadioGroup= (RadioGroup) findViewById(R.id.radiogroup);
          if(mSex.equals("男性")){
              mRadioGroup.check(R.id.radiobutton_male);
-         }else{
+         }if(mSex.equals("女性")){
              mRadioGroup.check(R.id.radiobutton_female);
          }
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -160,7 +162,9 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         });
 
         final EditText mEditTextUser = (EditText) findViewById(R.id.username_editText);
-        mEditTextUser.setText(mUser);
+        if(mUser!="0"){
+            mEditTextUser.setText(mUser);
+        }
         mEditTextUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,7 +200,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
 
     }
 
-    private void chartsetting() {
+    /**private void chartsetting() {
             for (HorizontalBarChart chart:list) {
                 setChart(chart);
                 getXAxis(chart);
@@ -205,7 +209,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                 getLegend(chart);
                 barData(chart);
             }
-    }
+    }*/
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -229,7 +233,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     public void onNothingSelected() {
     }
 
-    public void setChart(HorizontalBarChart chart){
+    /**public void setChart(HorizontalBarChart chart){
         chart.setDrawBarShadow(true);
         chart.setDrawValueAboveBar(true);
         chart.setPinchZoom(false);
@@ -334,7 +338,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         dataset.setDrawValues(true);
 
         return dataset;
-    }
+    }*/
 
     private void settingsearch(){
         Log.d("TEST","spinnerage2:"+mAge);
@@ -381,7 +385,7 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
         editor.commit();
 
         sharedpreferenceGet();
-        chartsetting();
+        //chartsetting();
     }
 
     private void sharedpreference(View view){
@@ -405,9 +409,9 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
     private void sharedpreferenceCall(){
 
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        mAge = sharedPref.getString(Const.AgePATH, "値無し");
-        mSex = sharedPref.getString(Const.SexPATH,"");
-        mUser = sharedPref.getString(Const.NamePATH,"");
+        mAge = sharedPref.getString(Const.AgePATH, "0");
+        mSex = sharedPref.getString(Const.SexPATH,"0");
+        mUser = sharedPref.getString(Const.NamePATH,"0");
 
         Log.d("TEST","mAgeの値："+mAge);
         Log.d("TEST","mSexの値："+mSex);
@@ -417,11 +421,9 @@ public class SettingActivity extends AppCompatActivity implements OnChartValueSe
                 .equalTo("age",mAge)
                 .equalTo("sex",mSex);
         Nutritiondata resultProtein = query.findFirst();
-        Log.d("TEST","resultProtein："+resultProtein);
         int mAgecall = resultProtein.getId();
-
         Log.d("TEST","mAgeCall2の値："+mAgecall);
-
+        Log.d("TEST","resultProtein："+resultProtein);
     }
 
     public void sharedpreferenceGet() {

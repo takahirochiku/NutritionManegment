@@ -482,7 +482,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
         chart2.add(new BarEntry(1f,mInputAmount));
         chart2.add(new BarEntry(2f, mAmount2));
-        
+
         BarDataSet DataSet1 = new BarDataSet(chart2,NutritionName);
         DataSet1.setBarBorderWidth(1f);
 

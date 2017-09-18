@@ -192,7 +192,8 @@ public class InputActivity extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH);// 0 - 11
         month++;
         day = calendar.get(Calendar.DAY_OF_MONTH);
-        //day++;
+        day++;
+        day++;
     }
 
     public void reload() {
